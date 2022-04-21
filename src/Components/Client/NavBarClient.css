@@ -1,0 +1,36 @@
+.navbar-client{
+    height: 100px;
+    background-color: #374a52;
+}
+.flex-row > i {
+    background-color: #374a52;
+    color : white;
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 10px;
+}
+.flex-row > .input-search{
+    border-radius: 0 15px 15px 0;
+    width: 500px;
+}
+.btn-navbar{
+    margin-left: 6rem;
+}
+.btn-navbar > .btn-light , 
+.btn-navbar > .btn-outline-light{
+    margin-left: 1em;
+}
+.panier{
+    background-color: #374a52;
+    font-size: large;
+    color: white;
+    opacity: 50%;
+    font-weight: bold;
+}
+.panier:hover{
+    color: white;
+    opacity: 100%;
+}
+.btn-dropdown{
+    border-radius: 15px 0 0 15px;
+}

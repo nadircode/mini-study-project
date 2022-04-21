@@ -1,0 +1,23 @@
+
+.trends-product{
+    margin-left: 6rem;
+}
+.card-product{
+    height : 18rem;
+    margin-left: 3rem;
+}
+.trends > h1{ margin-left: 2rem;}
+.list-group-item{}
+.btn-product{
+    margin-left: 3rem;
+    margin-top: -5px;
+}
+.btn-product > a{
+    color: black;
+    margin-left: 8px;
+    font-size: 18px;
+    opacity: 75%;
+}
+.btn-product > a:hover{
+    opacity: 100%;
+}
