@@ -2,7 +2,8 @@
 function NavBar(){
     return(
         <div>
-            <nav id="main-navbar" className="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+            <nav id="main-navbar" className="navbar navbar-expand-lg navbar-light bg-white fixed-top"
+            style={{position : "fixed" , height : "5rem"}}>
                 <div className="container-fluid">
                     <a className="navbar-brand">
                         <img
@@ -10,6 +11,7 @@ function NavBar(){
                             height="25"
                             alt=""
                             loading="lazy"
+                            style={{width : "60px"}}
                         />
                     </a>
                     <ul className="navbar-nav ms-auto d-flex flex-row">
@@ -52,6 +54,8 @@ function NavBar(){
                  height="22"
                  alt=""
                  loading="lazy"
+
+                 style={{width : "25px"}}
                  />
           </a>
           <ul

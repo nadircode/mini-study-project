@@ -14,7 +14,7 @@ function NavBarCategory(){
                         <Link class="nav-link" to="/"><i class="bi bi-house-door"></i>Home</Link>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-heart"></i>Favourites</a>
+                        <Link class="nav-link" to='/Favourite'><i class="bi bi-heart"></i>Favourites</Link>
                     </li>
                     <li class="nav-item">
                         <Link to="/accesoires_perephiriques">

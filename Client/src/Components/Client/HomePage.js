@@ -6,6 +6,7 @@ import New from './New';
 import Product from './Product';
 import Footer from './Footer';
 import Product_Details from './Product_Details';
+import Favourite from './Favourite';
 import {
     BrowserRouter as Router , 
   Routes,
@@ -25,6 +26,7 @@ function HomePage(){
                 <Route exact path='Product' element={<Product_Details />} ></Route>
                 <Route exact path='/' element={<Trends />} ></Route>  
                 <Route exact path='accesoires_perephiriques' element={<Product/>} ></Route>  
+                <Route exact path='Favourite' element={<Favourite />}></Route>
             </Routes>
             
             

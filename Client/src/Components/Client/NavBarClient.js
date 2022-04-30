@@ -9,7 +9,29 @@ import {
 } from "react-router-dom";
 import { useState } from 'react';
 import Product_Details from './Product_Details';
+import Axios from 'axios';
+
+
 function NavBarClient(){
+   /* SignUp*/ 
+    const [idClient , setIdClient] = useState();
+    const [fullname_Client , setFullname_Client] = useState("");
+    const [email_Client , setEmail_Client] = useState("");
+    const [mdp_Client , setMdp_Client] = useState("");
+    const [code_mdp_oublie , setCode_mdp_oublie] = useState();
+    const [date_inscription , setDate_iscription] = useState();
+    const [etat_ban , setEtat_ban] = useState(false);
+
+    /* Login*/
+    const [emailLogin , setEmailLogin] = useState("");
+    const [mdpLogin , setMdpLogin] = useState("");
+
+    /* Admin  */
+
+    const [emailAdmin , setEmailAdmin] = useState("");
+    const [passwordAdmin , setPasswordAdmin] = useState("");
+
+
     const [showLogin , setShowLogin] = useState(false);
     const [showSignup , setShowSignup] = useState(false);
 
@@ -18,6 +40,55 @@ function NavBarClient(){
 
     const handleClose_S = () => setShowSignup(false);
     const handleShow_S = () => {setShowSignup(true); setShowLogin(false);}
+
+    const [clientList , setClientList] = useState([]);
+
+    const addClient  = ()=>{
+        setIdClient(11111);
+        setCode_mdp_oublie(456);
+        setDate_iscription(new Date());
+        setEtat_ban(false);
+        Axios.post("http://localhost:8000/create_user",{
+            idClient : idClient ,
+            fullname_Client : fullname_Client ,
+            email_Client : email_Client ,
+            mdp_Client : mdp_Client ,
+            code_mdp_oublie : code_mdp_oublie ,
+            date_inscription : date_inscription ,
+            etat_ban : etat_ban
+        }).then(()=>{
+            setClientList([
+                {
+                    idClient : idClient ,
+                    fullname_Client : fullname_Client ,
+                    email_Client : email_Client ,
+                    mdp_Client : mdp_Client ,
+                    code_mdp_oublie : code_mdp_oublie ,
+                    date_inscription : date_inscription ,
+                    etat_ban : etat_ban
+                }
+            ])
+        })
+    }
+
+    const loginClient = ()=>{
+        Axios.post("http://localhost:8000/client", {
+            emailLogin : emailLogin ,
+            mdpLogin : mdpLogin
+        }).then((response)=>{
+            console.log(response.data);
+            console.log(response.data.role);
+        });
+
+        Axios.post("http://localhost:8000/admin", {
+            emailLogin : emailLogin ,
+            mdpLogin : mdpLogin
+        }).then((response)=>{
+            console.log(response.data)
+            console.log(response.data.role);
+        })
+        
+    }
     
     return (
         <div className='main-container sticky-top'>
@@ -66,6 +137,7 @@ function NavBarClient(){
                 </div>
                 
             </div>
+            {/* Login Modal*/ }
             <Modal show={showLogin} onHide={handleClose_L}>
                     <Modal.Header closeButton>
                         <Modal.Title className='modal-title w-100 font-weight-bold'><h4>Login</h4></Modal.Title>
@@ -77,16 +149,16 @@ function NavBarClient(){
                         className="mb-3 h-1"
                         style={{"font-size" : "14px"}}
                     >
-                        <Form.Control type="email" placeholder="name@example.com" style={{height : "50px"}} />
+                        <Form.Control type="email" placeholder="name@example.com" style={{height : "50px"}} onChange={(e)=>{setEmailLogin(e.target.value)}} />
                     </FloatingLabel>
                     <FloatingLabel controlId="floatingPassword" label="Password" style={{"font-size" : "14px"}}>
-                        <Form.Control type="password" placeholder="Password" style={{height : "50px"}}/>
+                        <Form.Control type="password" placeholder="Password" style={{height : "50px"}} onChange={(e)=>{setMdpLogin(e.target.value)}} />
                     </FloatingLabel>
                     <div className='justify-content-center list-group-item my-1' style={{marginLeft : "10rem"}}>
                         <a href='/forgot-password'>forgot password?</a>
                     </div>
                     <div className="d-grid gap-2 my-3">
-                    <Button variant="primary" size="lg">
+                    <Button variant="primary" size="lg" onClick={loginClient}>
                         Login
                     </Button>
                     </div>
@@ -96,7 +168,7 @@ function NavBarClient(){
                     </Modal.Body>
                     
             </Modal>
-
+            {/* Login Modal*/ }
             <Modal show={showSignup} onHide={handleClose_S}>
                     <Modal.Header closeButton>
                         <Modal.Title className='modal-title w-100 font-weight-bold'><h4>SignUp</h4></Modal.Title>
@@ -108,7 +180,7 @@ function NavBarClient(){
                         className="mb-3 h-1"
                         style={{"font-size" : "14px"}}
                     >
-                        <Form.Control type='text' placeholder="Full Name" style={{height : "50px"}} />
+                        <Form.Control type='text' placeholder="Full Name" style={{height : "50px"}} onChange={(e)=>{setFullname_Client(e.target.value)}} />
                     </FloatingLabel>
                     <FloatingLabel
                         controlId="floatingInput"
@@ -116,13 +188,13 @@ function NavBarClient(){
                         className="mb-3 h-1"
                         style={{"font-size" : "14px"}}
                     >
-                        <Form.Control type="email" placeholder="name@example.com" style={{height : "50px"}} />
+                        <Form.Control type="email" placeholder="name@example.com" style={{height : "50px"}} onChange={(e)=>{setEmail_Client(e.target.value)}} />
                     </FloatingLabel>
                     <FloatingLabel controlId="floatingPassword" label="Password" style={{"font-size" : "14px"}}>
-                        <Form.Control type="password" placeholder="Password" style={{height : "50px"}}/>
+                        <Form.Control type="password" placeholder="Password" style={{height : "50px"}} onChange={(e)=>{setMdp_Client(e.target.value)}} />
                     </FloatingLabel>
                     <div className="d-grid gap-2 my-3">
-                    <Button variant="primary" size="lg">
+                    <Button variant="primary" size="lg" onClick={addClient}>
                         SignUp
                     </Button>
                     </div>
