@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 const mysql = require("mysql");
 const cors = require("cors");
+const multer = require('multer');
+const path = require('path');
+
+
 
 app.use(cors());
 app.use(express.json());
@@ -12,7 +16,7 @@ const db = mysql.createConnection({
     password : "root" , 
     database : "ecommercesystem"
 }); 
-
+/* User*/
 app.post("/create_user" , (req,res) =>{
     console.log(req.body.fullname_Client);
     const idClient = req.body.idClient;
@@ -76,26 +80,49 @@ app.post("/admin" , (req,res)=>{
     })
 })
 
-// app.get("/admin",(req,res)=>{
-//     db.query("SELECT * FROM admin" , (err,result)=>{
-//         if(err){
-//             console.log(err);
-//         }
-//         else{
-//             res.send(result);
-//         }
-//     })
+/* Article */
+
+// const storage = multer.diskStorage({
+//     destination: path.join(__dirname, '../public_html/', 'uploads'),
+//     filename: function (req, file, cb) {   
+//         // null as first argument means no error
+//         cb(null, Date.now() + '-' + file.originalname )  
+//     }
 // })
 
-// app.get("/get_user" , (req , res)=>{
-//     db.query("SELECT * from user",(err , result)=>{
-//         if(err) console.log(err);
-//         else{
-//             res.send(result);
-//             console.log("IS worked GET");
-//         }
-//     })
-// })
+app.post("/create_article" , (req,res)=>{
+    const IDarticle = req.body.IDarticle ;
+    const prix = req.body.prix ;
+    const nom_article = req.body.nom_article ;
+    const description = req.body.description ;
+    const nbr_etoile = req.body.nbr_etoile ;
+    const nombre_enstock = req.body.nombre_enstock ;
+    const etat_article = req.body.etat_article ;
+    const imgone = req.body.imageOne ;
+    console.log(etat_article);
+    console.log(IDarticle);
+    db.query("INSERT INTO article(IDarticle,prix,nom_article,description,nbr_etoile,nombre_enstock,etat_article,imgone) VALUES (?,?,?,?,?,?,?,?)" , 
+    [IDarticle,prix,nom_article,description,nbr_etoile,nombre_enstock,etat_article,imgone] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            res.send(result);
+            console.log("Data was insert into article table success");
+        }
+    })
+})
+
+app.get("/get_article",(req,res)=>{
+    db.query("SELECT * FROM article" , (err,result)=>{
+        if(err){
+            console.log(err)
+        }
+        else {
+            res.send(result);
+        }
+    })
+})
 
 app.listen(8000 , ()=>{
     console.log("Server is running");

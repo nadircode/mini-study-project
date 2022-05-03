@@ -1,8 +1,15 @@
-.nav-link{
-    color: #374a52;
-    font-size: 14px;
-}
 #dropdown-navbar{
     font-size: 14px;
 }
-.navbar {position: sticky;}
+.navbar {
+    position: sticky;
+}
+.nav-link {
+    color: #374a52;
+    font-size: 14px;
+}
+
+.nav-item{
+    margin-left: 4em;
+    justify-content: space-between;
+}

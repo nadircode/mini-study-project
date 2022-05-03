@@ -36,3 +36,11 @@
     max-width: 150px;
     border-radius: 20px;
 }
+
+table:hover{
+    animation: none;
+    transform: none;
+    scale: none;
+    /* transition: none; */
+    transition: 0s;
+}

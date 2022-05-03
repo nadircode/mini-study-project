@@ -10,8 +10,11 @@ import HomePage from './Components/Client/HomePage';
 function App() {
   return (
     <>
+    {/* Admin Side */}
     <NavBar />
-    <SideBar />
+    <SideBar />   
+
+    {/* Cleint Side*/}
     {/* <HomePage /> */}
     </>
   );
