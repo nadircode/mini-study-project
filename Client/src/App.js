@@ -11,11 +11,11 @@ function App() {
   return (
     <>
     {/* Admin Side */}
-    <NavBar />
-    <SideBar />   
+    {/* <NavBar />
+    <SideBar />    */}
 
     {/* Cleint Side*/}
-    {/* <HomePage /> */}
+    <HomePage />
     </>
   );
 }

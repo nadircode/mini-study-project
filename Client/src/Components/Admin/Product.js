@@ -1,23 +1,21 @@
 import './Product.css';
-import {useRef, useState , useEffect} from 'react';
+import {useRef, useState , useEffect } from 'react';
+import {useForm} from 'react-hook-form';
 import {Button , Form, Modal} from 'react-bootstrap';
 import Axios from 'axios';
 function Product (){
-    const [productDetails , setProductDetails] = useState({})
+    const [productDetails , setProductDetails] = useState([])
+    const [imgurl , setImgurl] = useState('')
+    const [loading , setLoading] = useState(false)
+    
     useEffect(()=>{
         Axios.get("http://localhost:8000/get_article").then((response)=>{
-            console.log(response.data[0].nom_article);
-            setProductDetails(response.data[0])
-            console.log(productDetails)            // setProductList([{
-            //     IDarticle  : response.data[0].IDarticle , 
-            //     prix : response.data[0].prix ,
-            //     nom_article : response.data[0].nom_article ,
-            //     description : response.data[0].description ,
-            //     nbr_etoile : response.data[0].nbr_etoile ,
-            //     nombre_enstock : response.data[0].nombre_enstock ,
-            //     etat_article : response.data[0].etat_article ,
-            //     imageOne : response.data[0].imageOne.filepreview
-            // }])
+            console.log("Data for Useeffect")
+            console.log(response.data)
+            setLoading(true)
+            setProductDetails(response.data)
+            console.log(productDetails)
+            console.log(productDetails.imgone)
         })
     },[]);
     
@@ -44,7 +42,7 @@ function Product (){
     
 
     /* Product Variables */
-    const [IDarticle , setIDarticle] = useState(11111)
+    const [IDarticle , setIDarticle] = useState(1)
     const [prix , setPrix] = useState()
     const [nom_article , setNom_article] = useState()
     const [description , setDescription] = useState()
@@ -55,6 +53,7 @@ function Product (){
         file : [] , 
         filepreview : null
     })
+    
 
     const [option , setOption] = useState(0);
 
@@ -118,7 +117,36 @@ function Product (){
         }
             
     }
-    const postData = () =>{
+    const [file, setFile] = useState();
+    const [fileName, setFileName] = useState("");
+    const [image, setImage] = useState({ preview: '', data: '' })
+    const [status , setStatus] = useState('')
+      const saveFile = async(e)=>{
+        e.preventDefault();
+        setImageOne({...imageOne ,
+             file : e.target.files[0] , 
+             filepreview:URL.createObjectURL(e.target.files[0])
+            }
+           
+        )
+        const img = {
+            preview: URL.createObjectURL(e.target.files[0]),
+            data: e.target.files[0],
+          }
+          setImage(img)
+        // console.log("file : " + e.target.files[0]);
+        // console.log("filepreview : " +URL.createObjectURL(e.target.files[0]));
+
+        // console.log("Image : " + image.data);
+        
+    }
+    const {register , handleSubmit} = useForm();
+    const postData = (data) =>{
+        // console.log("Data : " + data);
+        const formData = new FormData();
+        formData.append("file", image.data);
+        // formData.append("fileName", fileName);
+        // console.log(formData);
         Axios.post("http://localhost:8000/create_article",{
             IDarticle  : IDarticle , 
             prix : prix ,
@@ -128,7 +156,8 @@ function Product (){
             nombre_enstock : nombre_enstock ,
             etat_article : etat_article ,
             imageOne : imageOne.filepreview
-        }).then(()=>{
+        })
+        .then(()=>{
             setProductList([{
                 IDarticle  : 11111 , 
                 prix : prix ,
@@ -140,12 +169,63 @@ function Product (){
                 imageOne : imageOne.filepreview
             }])
         })
+        console.log("Form Data : " + formData)
+        console.log("Image 2 : " + image)
+        console.log(productList)
         setShow3(false);
         setCongrat(true);
     }
 
     
-
+    const productItems = ()=>{
+        if(loading == true){
+        if(productDetails != null){
+            return (
+                
+                productDetails.map((p)=>(
+                    <div class="d-sm-flex justify-content-between my-4 pb-4 border-bottom" key={p.IDarticle} >
+                            <div className='media d-block d-sm-flex text-center text-sm-left'>
+                                <a class="cart-item-thumb mx-auto mr-sm-4" href="#"><img  alt="Product" src={require(`../Images/categorie/${p.imgone}.jpg`)}  /> </a>
+                                <div class="media-body pt-3">
+                                    <h3 class="product-card-title font-weight-semibold border-0 pb-0"><a href="#">{p.nom_article}</a></h3>
+                                    <div class="font-size-sm"><span class="text-muted mr-2">Categorie:</span>{p.category}</div>
+                                    <div class="font-size-sm"><span class="text-muted mr-2">Sous Categorie:</span>{p.sous_category}</div>
+                                    <div class="font-size-lg text-primary pt-2">{p.prix} DA</div>
+                                </div>
+                            </div>
+                            <div className="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left">
+                                <div class="form-group mb-2">
+                                    <label for="quantity1" >Quantity</label>
+                                    <input class="form-control form-control-sm" type="number" id="quantity1" value={p.nombre_enstock} disabled='true'/>
+                                </div>
+                                
+                                <button className="btn btn-outline-secondary btn-sm btn-block mb-2 d-block" type="button">
+                                <i class="bi bi-pencil-fill"></i> Modifier
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm btn-block mb-2 d-block" type="button">
+                                    <i className='bi bi-trash'></i> Supprimer
+                                </button>
+                                
+                            </div>
+                        </div>
+                ))
+                
+               
+            )
+        }
+        
+    }
+        else if(loading == false) {
+            return (
+                <div>Loading...</div>
+            )
+        }
+        else {
+            return(
+                <div>Connect To Server To Fetch Data from database</div>
+            )
+        }
+    }
 
     return(
         <>
@@ -260,10 +340,10 @@ function Product (){
                         <li class="step0 active text-center" id="step2"></li>
                         <li class="step0 active text-muted text-end" id="step3"></li>
                     </ul>
-                    <Form>
+                    <Form onSubmit={handleSubmit(postData)}>
                        <Form.Group>
                            <Form.Label className='fw-bold'>Sélectionner une Image</Form.Label>
-                            <Form.Control type='file' onChange={(e)=>{setImageOne({...imageOne , file : e.target.files[0] , filepreview:URL.createObjectURL(e.target.files[0])})}} />  
+                            <Form.Control type='file' name='image' {...register('value_name')} onChange={(e)=>{saveFile(e)}} />  
                         </Form.Group>    
                         {imageOne.filepreview !=null 
                             ? <img src={imageOne.filepreview} alt="Upload Image" />
@@ -307,33 +387,7 @@ function Product (){
                 <div className='row'>
                     <div className='col-xl-9 col-md-8'>
                         {/* Item */}
-                        { (productDetails != null)
-                        ? (<div class="d-sm-flex justify-content-between my-4 pb-4 border-bottom">
-                            <div className='media d-block d-sm-flex text-center text-sm-left'>
-                                <a class="cart-item-thumb mx-auto mr-sm-4" href="#"><img src={productDetails.imgone} alt="Product" /></a>
-                                <div class="media-body pt-3">
-                                    <h3 class="product-card-title font-weight-semibold border-0 pb-0"><a href="#">{productDetails.nom_article}</a></h3>
-                                    <div class="font-size-sm"><span class="text-muted mr-2">Categorie:</span>Télephone</div>
-                                    <div class="font-size-lg text-primary pt-2">{productDetails.prix} DA</div>
-                                </div>
-                            </div>
-                            <div className="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-left">
-                                <div class="form-group mb-2">
-                                    <label for="quantity1">Quantity</label>
-                                    <input class="form-control form-control-sm" type="number" id="quantity1" value={productDetails.nombre_enstock} />
-                                </div>
-                                
-                                <button className="btn btn-outline-secondary btn-sm btn-block mb-2 d-block" type="button">
-                                <i class="bi bi-pencil-fill"></i> Modifier
-                                </button>
-                                <button class="btn btn-outline-danger btn-sm btn-block mb-2 d-block" type="button">
-                                    <i className='bi bi-trash'></i> Supprimer
-                                </button>
-                                
-                            </div>
-                        </div> )
-                        : <div> Loading... </div>
-                        }
+                        {productItems()}
                     </div>
                 </div>
             </div>
