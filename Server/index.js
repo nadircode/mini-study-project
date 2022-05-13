@@ -1,14 +1,17 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const mysql = require("mysql");
+const mysql = require('mysql');
 const cors = require("cors");
 const multer = require('multer');
 const path = require('path');
+const bodyParser = require('body-parser');
 
 
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static("./public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = mysql.createConnection({
     user : "root" ,
@@ -82,15 +85,20 @@ app.post("/admin" , (req,res)=>{
 
 /* Article */
 
-// const storage = multer.diskStorage({
-//     destination: path.join(__dirname, '../public_html/', 'uploads'),
-//     filename: function (req, file, cb) {   
-//         // null as first argument means no error
-//         cb(null, Date.now() + '-' + file.originalname )  
-//     }
-// })
+var storage = multer.diskStorage({
+    destination: (req, file, callBack) => {
+        callBack(null, './public/images/')     // './public/images/' directory name where save the file
+    },
+    filename: (req, file, callBack) => {
+        callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    }
+})
 
-app.post("/create_article" , (req,res)=>{
+var upload = multer({
+    storage: storage
+});
+
+app.post("/create_article" ,upload.single('image') ,  (req,res)=>{
     const IDarticle = req.body.IDarticle ;
     const prix = req.body.prix ;
     const nom_article = req.body.nom_article ;
@@ -98,17 +106,20 @@ app.post("/create_article" , (req,res)=>{
     const nbr_etoile = req.body.nbr_etoile ;
     const nombre_enstock = req.body.nombre_enstock ;
     const etat_article = req.body.etat_article ;
-    const imgone = req.body.imageOne ;
+    
+    var imgsrc =  req.body.imageOne ;
     console.log(etat_article);
     console.log(IDarticle);
+    console.log(imgsrc);
     db.query("INSERT INTO article(IDarticle,prix,nom_article,description,nbr_etoile,nombre_enstock,etat_article,imgone) VALUES (?,?,?,?,?,?,?,?)" , 
-    [IDarticle,prix,nom_article,description,nbr_etoile,nombre_enstock,etat_article,imgone] , (err,result)=>{
+    [IDarticle,prix,nom_article,description,nbr_etoile,nombre_enstock,etat_article,imgsrc] , (err,result)=>{
         if(err){
             console.log(err);
         }
         else {
             res.send(result);
             console.log("Data was insert into article table success");
+            console.log("Image was uploaded with success");
         }
     })
 })
@@ -119,6 +130,33 @@ app.get("/get_article",(req,res)=>{
             console.log(err)
         }
         else {
+            // console.log(result);
+            res.send(result);
+        }
+    })
+})
+
+app.get("/get_trends_article",(req,res)=>{
+    db.query("SELECT * FROM article WHERE etat_article='Tendance' " ,(err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            console.log("Data of trends Items\n");
+            console.log(result);
+            res.send(result);
+        }
+    })
+})
+
+app.get("/get_new_article",(req,res)=>{
+    db.query("SELECT * FROM article WHERE etat_article='Nouveau' " ,(err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            console.log("Data of New Items\n");
+            console.log(result);
             res.send(result);
         }
     })
