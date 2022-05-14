@@ -142,8 +142,8 @@ app.get("/get_trends_article",(req,res)=>{
             console.log(err);
         }
         else {
-            console.log("Data of trends Items\n");
-            console.log(result);
+            // console.log("Data of trends Items\n");
+            // console.log(result);
             res.send(result);
         }
     })
@@ -155,12 +155,39 @@ app.get("/get_new_article",(req,res)=>{
             console.log(err);
         }
         else {
-            console.log("Data of New Items\n");
-            console.log(result);
+            // console.log("Data of New Items\n");
+            // console.log(result);
             res.send(result);
         }
     })
 })
+
+
+app.post("/product_details" , (req,res)=>{
+    const IDarticle = req.body.id;
+    console.log(IDarticle);
+    db.query("SELECT * FROM article WHERE IDarticle = ? " ,[IDarticle] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                role : "Client"
+            });
+            }
+        }
+    })
+})
+
+
+
 
 app.listen(8000 , ()=>{
     console.log("Server is running");
