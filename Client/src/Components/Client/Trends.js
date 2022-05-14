@@ -8,12 +8,14 @@ import {
     BrowserRouter as Router , 
   Routes,
   Route,
-  Link
+  Link , 
+  useNavigate
 } from "react-router-dom";
 import Axios from 'axios';
 import { useState , useEffect} from 'react';
 function Trends(){
 
+    let naviagate = useNavigate();
     const [trendsItem , setTrendsItem] = useState([])
     const [loading , setLoading] = useState(false)
     useEffect(()=>{
@@ -32,14 +34,24 @@ function Trends(){
         };
     },[])
 
+    
+
     const getTrends_Item = ()=>{
         if(loading==true){
             if(trendsItem != null){
                 return(
                 trendsItem.map((p)=>(
                 <Card style={{width : '14rem'}} className='mt-5 ml-9 card-product' key={p.IDarticle}>
-                    <Link to="/Product">
-                    <Card.Img variant='top' className='align-items-center' style={{width : "200px"}} src={require(`../Images/categorie/${p.imgone}.jpg`)} />
+                    <Link to={`Products/${p.category}/${p.sous_category}/${p.nom_article}/${p.IDarticle}`}>
+                    <Card.Img 
+                    variant='top' 
+                        className='align-items-center' 
+                        style={{width : "200px"}} 
+                        src={require(`../Images/categorie/${p.imgone}.jpg`)}
+                        onClick={()=>{
+                            naviagate(`Products/${p.category}/${p.sous_category}/${p.nom_article}/${p.IDarticle}`);
+                        }}
+                     />
                     </Link>
                         <Card.Body>
                             <Card.Title>{p.nom_article}</Card.Title>

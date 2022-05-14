@@ -1,6 +1,10 @@
 
 /*****************globals*************/
+  #pic-1 > img{
+    height: 400px;
+  }
 
+ 
   
   .preview {
     display: -webkit-box;
@@ -40,7 +44,7 @@
   .tab-content {
     overflow: hidden; }
     .tab-content img {
-      width: 100%;
+      width: 200px;
       -webkit-animation-name: opacity;
               animation-name: opacity;
       -webkit-animation-duration: .3s;
