@@ -113,6 +113,32 @@ export default function Product_Details(){
 			)
 		}
 	}
+	const IDarticle = 0
+	const prix = 0
+	const nomarticle = ""
+	const description = ""
+	const nbr_etoile = ""
+	const imgone = ""
+	const _category = ""
+	const _sous_category = ""
+
+
+	
+
+	let add_tofavourites = (p)=>{
+		Axios.post("http://localhost:8000/add_favourite_product",{
+			 IDarticle : p.IDarticle , 
+			 prix : p.prix ,
+			 nomarticle : p.nom_article ,
+			 description : p.description ,
+			 nbr_etoile : p.nbr_etoile ,
+			 imgone : p.imgone ,
+			 _category : p.category ,
+			 _sous_category : p.sous_category
+		}).then((res)=>{
+			console.log(res);
+		})
+	}
 
 	let get_productDetails = ()=>{
 		if(loading==true){
@@ -151,7 +177,7 @@ export default function Product_Details(){
 						<p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
 						<div class="action">
 							<button class="add-to-cart btn btn-default" type="button">Ajouter au Panier</button>
-							<button class="like btn btn-default" type="button"><span class="fa fa-heart"></span></button>
+							<button class="like btn btn-default" type="button" onClick={()=>{add_tofavourites(p)}}><span class="fa fa-heart"></span></button>
 						</div>
                         <div className='btn-commander mt-2'>
                             <button type='button' className='btn btn-lg btn-danger'>Commander</button>

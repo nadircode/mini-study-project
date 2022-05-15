@@ -17,24 +17,24 @@ function NavBarCategory(){
                         <Link class="nav-link" to='/Favourite'><i class="bi bi-heart" style={{marginTop : "-2px"}}></i> Favourites</Link>
                     </li>
                     <li class="nav-item">
-                        <Link to="/accesoires_perephiriques">
+                        
                         <Dropdown>
                             <Dropdown.Toggle variant='light' id="dropdown-navbar">
                                 <i class="bi bi-headset"></i> Périphérique PC
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Clavier</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">Casque</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Ecran</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Haut Parleur</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">HDD Externe</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Manette</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Microphone</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Souris</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">USB</Dropdown.Item>
+                               <Link to="/accesoires_perephiriques/clavier"> <Dropdown.Item href="#/action-1">Clavier</Dropdown.Item></Link>
+                               <Link to="/accesoires_perephiriques/casque"><Dropdown.Item href="#/action-2">Casque</Dropdown.Item></Link>
+                               <Link to="/accesoires_perephiriques/ecran"><Dropdown.Item href="#/action-3">Ecran</Dropdown.Item></Link>
+                               <Link to="/accesoires_perephiriques/haut_parleur"><Dropdown.Item href="#/action-3">Haut Parleur</Dropdown.Item></Link>
+                               <Link to="/accesoires_perephiriques/hdd_externe"><Dropdown.Item href="#/action-3">HDD Externe</Dropdown.Item></Link>
+                               <Link to="/accesoires_perephiriques/manette"><Dropdown.Item href="#/action-3">Manette</Dropdown.Item></Link>
+                               <Link to="/accesoires_perephiriques/microphone"><Dropdown.Item href="#/action-3">Microphone</Dropdown.Item></Link>
+                               <Link to="/accesoires_perephiriques/souris"><Dropdown.Item href="#/action-3">Souris</Dropdown.Item></Link>
+                               <Link to="/accesoires_perephiriques/usb"><Dropdown.Item href="#/action-3">USB</Dropdown.Item></Link>
                             </Dropdown.Menu>
                         </Dropdown>
-                        </Link>
+                        
                     </li>
                     <li class="nav-item">
                         <Dropdown>

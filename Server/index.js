@@ -174,6 +174,37 @@ app.post("/product_details" , (req,res)=>{
             if(result.length > 0){
                 
                 res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                // role : "Client"
+            });
+            }
+        }
+    })
+})
+
+app.post("/add_favourite_product" , (req,res)=>{
+    const IDarticle = req.body.IDarticle;
+    const prix = req.body.prix ;
+    const nom_article = req.body.nomarticle ;
+    const description = req.body.description ;
+    const nbr_etoile = req.body.nbr_etoile ;
+    const imgone = req.body.imgone ;
+    const category = req.body._category ;
+    const sous_category = req.body._sous_category ;
+    console.log(IDarticle);
+    db.query("INSERT INTO favourites (prix,nom_article,description,nbr_etoile,imgone,category,sous_category,IDarticle) VALUES (?,?,?,?,?,?,?,?)",
+    [prix,nom_article,description,nbr_etoile,imgone,category,sous_category,IDarticle] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
                 console.log(result);
                 // res.send({role : "Admin"});
             }
@@ -185,6 +216,45 @@ app.post("/product_details" , (req,res)=>{
         }
     })
 })
+
+app.get("/get_favourite_article",(req,res)=>{
+    db.query("SELECT * FROM favourites " ,(err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            console.log("Data of New Items\n");
+            console.log(result);
+            res.send(result);
+        }
+    })
+})
+
+app.post("/delete_favourite_article" , (req,res)=>{
+    const IDarticle = req.body.IDarticle;
+    console.log("This ID : " + IDarticle + "Has been deleted");
+    db.query("DELETE FROM favourites WHERE IDarticle = ? ",
+    [IDarticle] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                role : "Client"
+            });
+            }
+        }
+    })
+}
+    )
+
 
 
 
