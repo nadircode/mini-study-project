@@ -9,7 +9,8 @@
     font-size: 14px;
 }
 
-.nav-item{
+.nav-item {
     margin-left: 4em;
     justify-content: space-between;
+    text-decoration: none;
 }

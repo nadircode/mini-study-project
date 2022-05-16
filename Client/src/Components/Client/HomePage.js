@@ -25,7 +25,7 @@ function HomePage(){
             <Routes>
                 <Route exact path='Products/:category/:sous_category/:nom_article/:id' element={<Product_Details />} ></Route>
                 <Route exact path='/' element={<Trends />} ></Route>  
-                <Route exact path='accesoires_perephiriques' element={<Product/>} ></Route>  
+                <Route exact path='product_item/:category/:sous_category' element={<Product />} ></Route>  
                 <Route exact path='Favourite' element={<Favourite />}></Route>
             </Routes>
             

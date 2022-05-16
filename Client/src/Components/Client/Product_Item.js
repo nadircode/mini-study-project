@@ -1,6 +1,8 @@
 import './Filter.css';
 
-export default function Product_Item(){
+ function Product_Item({props}){
+
+      
     return(
     <section id="products">
     <div class="container py-3">
@@ -137,3 +139,5 @@ export default function Product_Item(){
     </div>
 </section>)
 }
+
+export default Product_Item ;

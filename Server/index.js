@@ -205,7 +205,7 @@ app.post("/add_favourite_product" , (req,res)=>{
             if(result.length > 0){
                 
                 res.send(result);
-                console.log(result);
+                // console.log(result);
                 // res.send({role : "Admin"});
             }
             else {
@@ -223,8 +223,8 @@ app.get("/get_favourite_article",(req,res)=>{
             console.log(err);
         }
         else {
-            console.log("Data of New Items\n");
-            console.log(result);
+            // console.log("Data of New Items\n");
+            // console.log(result);
             res.send(result);
         }
     })
@@ -242,7 +242,7 @@ app.post("/delete_favourite_article" , (req,res)=>{
             if(result.length > 0){
                 
                 res.send(result);
-                console.log(result);
+                // console.log(result);
                 // res.send({role : "Admin"});
             }
             else {
@@ -253,7 +253,30 @@ app.post("/delete_favourite_article" , (req,res)=>{
         }
     })
 }
-    )
+)
+
+app.post("/get_sous_category" , (req,res)=>{
+    const sous_category = req.body.sous_category;
+    console.log(sous_category);
+    db.query("SELECT * FROM article WHERE sous_category = ? " ,[sous_category] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                // role : "Client"
+            });
+            }
+        }
+    })
+})
 
 
 
