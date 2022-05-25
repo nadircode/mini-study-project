@@ -5,11 +5,13 @@ import {
     BrowserRouter as Router , 
   Routes,
   Route,
-  Link
+  Link , 
+  useNavigate
 } from "react-router-dom";
 import { useState } from 'react';
 import Product_Details from './Product_Details';
 import Axios from 'axios';
+import logo from '../Images/Logo.png'
 
 
 function NavBarClient(){
@@ -18,7 +20,7 @@ function NavBarClient(){
     const [fullname_Client , setFullname_Client] = useState("");
     const [email_Client , setEmail_Client] = useState("");
     const [mdp_Client , setMdp_Client] = useState("");
-    const [code_mdp_oublie , setCode_mdp_oublie] = useState();
+    const [code_mdp_oublie , setCode_mdp_oublie] = useState('');
     const [date_inscription , setDate_iscription] = useState();
     const [etat_ban , setEtat_ban] = useState(false);
 
@@ -43,17 +45,18 @@ function NavBarClient(){
 
     const [clientList , setClientList] = useState([]);
 
+    let navigate = useNavigate()
+
     const addClient  = ()=>{
-        setIdClient(11111);
-        setCode_mdp_oublie(456);
-        setDate_iscription(new Date());
-        setEtat_ban(false);
+        let time = new Date()
+        setDate_iscription(`${time.getDay()}/${time.getMonth()}/${time.getFullYear()}`);
+        setCode_mdp_oublie
+        setEtat_ban("false");
         Axios.post("http://localhost:8000/create_user",{
-            idClient : idClient ,
+            
             fullname_Client : fullname_Client ,
             email_Client : email_Client ,
             mdp_Client : mdp_Client ,
-            code_mdp_oublie : code_mdp_oublie ,
             date_inscription : date_inscription ,
             etat_ban : etat_ban
         }).then(()=>{
@@ -72,7 +75,12 @@ function NavBarClient(){
     }
 
     const loginClient = ()=>{
-        Axios.post("http://localhost:8000/client", {
+        if(emailLogin == 'admin@gmail.com' && mdpLogin == 'admin'){
+            navigate('/admin');
+            console.log('Admin')
+        }
+        else {
+        Axios.post("http://localhost:8000/client", { 
             emailLogin : emailLogin ,
             mdpLogin : mdpLogin
         }).then((response)=>{
@@ -87,7 +95,13 @@ function NavBarClient(){
             console.log(response.data)
             console.log(response.data.role);
         })
-        
+    }
+    }
+
+    let keyPress = (e)=>{
+        if(e.key=="Enter"){
+            loginClient();
+        }
     }
     
     return (
@@ -97,7 +111,7 @@ function NavBarClient(){
                 
                 <a className="navbar-brand col-3">
                 <img
-                     src={process.env.PUBLIC_URL+"Logo.png"}
+                     src={logo}
                      height="25"
                      alt=""
                      loading="lazy"
@@ -123,7 +137,7 @@ function NavBarClient(){
                 </div>
                 <div className='col-3'>
                     <div className='btn-navbar'>
-                    <button className='panier border-0 btn'><i class="bi bi-cart"></i></button>
+                    {/* <button className='panier border-0 btn'><i class="bi bi-cart"></i></button> */}
                     <Button variant='outline-light' onClick={handleShow_L}>
                         Login
                     </Button>
@@ -138,7 +152,7 @@ function NavBarClient(){
                 
             </div>
             {/* Login Modal*/ }
-            <Modal show={showLogin} onHide={handleClose_L}>
+            <Modal show={showLogin} onHide={handleClose_L} onKeyPress={keyPress}>
                     <Modal.Header closeButton>
                         <Modal.Title className='modal-title w-100 font-weight-bold'><h4>Login</h4></Modal.Title>
                     </Modal.Header>
@@ -158,7 +172,12 @@ function NavBarClient(){
                         <a href='/forgot-password'>forgot password?</a>
                     </div>
                     <div className="d-grid gap-2 my-3">
-                    <Button variant="primary" size="lg" onClick={loginClient}>
+                    <Button 
+                    variant="primary" 
+                    size="lg" 
+                    onClick={loginClient}
+                    
+                    >
                         Login
                     </Button>
                     </div>

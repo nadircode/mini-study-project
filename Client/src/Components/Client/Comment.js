@@ -23,7 +23,7 @@ export default function Comment(){
                                 </div>
 
                                 <p class="mt-3 mb-4 pb-2">
-                                This Fucking product is so Bad ! fuuuuuuuuuck You !
+                                Good Product
                                 </p>
                             </div>
                             <div class="card-footer py-3 border-0 text-area-comment" >

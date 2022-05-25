@@ -29,26 +29,26 @@ const handleToggle = ()=>{
     setIsActive(!isActive);
 }
     return(
-        <Router>
+        
         <div >
             <nav id="side-bar-menu"
                 className='collapse d-lg-block sidebar collapse bg-white'
             >
                 <div className='position-sticky'>
                     <div className='list-group list-group-flush mt-4 mx-3 lists'>
-                                <Link to="/Dashboard" className="list-group-item list-group-item-action  py-2 ripple" onClick={handleToggle} >
+                                <Link to="/admin/Dashboard" className="list-group-item list-group-item-action  py-2 ripple" onClick={handleToggle} >
                                 <i class="bi bi-speedometer me-3"></i><span>Dashboard</span>
                                 </Link>
 
-                                <Link to="/Clients" className='list-group-item list-group-item-action py-2 ripple'>
+                                <Link to="/admin/Clients" className='list-group-item list-group-item-action py-2 ripple'>
                                 <i class="bi bi-people me-3"></i><span>Clients</span>
                                 </Link>
 
-                                <Link to="/Product" className='list-group-item list-group-item-action py-2 ripple'>
+                                <Link to="/admin/Product" className='list-group-item list-group-item-action py-2 ripple'>
                                 <i class="bi bi-bag me-3"></i><span>Produits</span>
                                 </Link>
 
-                                <Link to="/Orders" className='list-group-item list-group-item-action py-2 ripple'>
+                                <Link to="/admin/Orders" className='list-group-item list-group-item-action py-2 ripple'>
                                 <i class="bi bi-list-ul me-3"></i><span>Orders</span>
                                 </Link>
 
@@ -61,15 +61,15 @@ const handleToggle = ()=>{
                 </div>
             </nav>
             <Routes>
-                <Route path="Dashboard" element={<Dashboard />}></Route>
-                <Route path="Clients" element={<Clients />}></Route>
-                <Route path="Product" element={<Product />}></Route>
-                <Route path="Orders" element={<Orders />}></Route>
+                <Route path="/Dashboard" element={<Dashboard />}></Route>
+                <Route path="/Clients" element={<Clients />}></Route>
+                <Route path="/Product" element={<Product />}></Route>
+                <Route path="/Orders" element={<Orders />}></Route>
                 {/* <Route path="Blocked" element={<Blocked />}></Route> */}
             </Routes>
             
         </div>
-        </Router>
+        
         
     );
 }

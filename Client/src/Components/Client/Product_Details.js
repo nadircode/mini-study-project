@@ -14,6 +14,15 @@ export default function Product_Details(){
 
 	const [loading , setLoading] = useState(false)
 
+	const [panier , setPanier] = useState([{
+		IDarticle : null, 
+		nom_article  : '' ,
+		category : '' , 
+		sous_category : '' , 
+		prix : null , 
+		nbr_etoile : null
+	}]);
+
 	useEffect(()=>{
 		let isMounted = true 
 		Axios.post("http://localhost:8000/product_details",{
@@ -123,7 +132,20 @@ export default function Product_Details(){
 	const _sous_category = ""
 
 
-	
+	let add_toPanier = (p)=>{
+		let olditems = JSON.parse(localStorage.getItem('productPanier')) || [];
+		var newItem = {
+			IDarticle : p.IDarticle ,
+			nom_article : p.nom_article ,
+			category : p.category , 
+			sous_category : p.sous_category , 
+			imgone : p.imgone ,
+			prix : p.prix ,
+			nbr_etoile : p.nbr_etoile
+		};
+		olditems.push(newItem)
+		localStorage.setItem('productPanier' ,JSON.stringify(olditems) );	
+	}
 
 	let add_tofavourites = (p)=>{
 		Axios.post("http://localhost:8000/add_favourite_product",{
@@ -176,7 +198,7 @@ export default function Product_Details(){
 						<h4 class="price">prix <span className='text-danger'>{p.prix} Da</span></h4>
 						<p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
 						<div class="action">
-							<button class="add-to-cart btn btn-default" type="button">Ajouter au Panier</button>
+							<button class="add-to-cart btn btn-default" type="button" onClick={()=>{add_toPanier(p)}}>Ajouter au Panier</button>
 							<button class="like btn btn-default" type="button" onClick={()=>{add_tofavourites(p)}}><span class="fa fa-heart"></span></button>
 						</div>
                         <div className='btn-commander mt-2'>

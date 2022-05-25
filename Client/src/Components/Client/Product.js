@@ -6,10 +6,16 @@ import { useEffect, useState } from 'react';
 function Product(){
 
     const {category} = useParams();
-    const {sous_category} = useParams();
+    const {sous_category} = useParams()
+    useEffect(()=>{
+        
+        document.title =`${sous_category}`;
+    },[sous_category])
     return(
         <div className='d-flex flex-row'>
-        <Filter />
+            
+        <Filter sous_category={sous_category} />
+       
         </div>
     )
 }

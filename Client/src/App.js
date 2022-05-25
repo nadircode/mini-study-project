@@ -6,17 +6,33 @@ import Clients from './Components/Admin/Clients';
 import Product from './Components/Admin/Product';
 import Orders from './Components/Admin/Orders';
 import HomePage from './Components/Client/HomePage';
+import Admin from './Components/Admin/Admin';
+import {
+  BrowserRouter as Router , 
+Routes,
+Route,
+Link
+}from "react-router-dom";
 
 function App() {
   return (
     <>
-    {/* Admin Side */}
-    {/* <NavBar />
-    <SideBar />    */}
-
-    {/* Cleint Side*/}
-    <HomePage />
+    <Router>
+      <Routes>
+        
+        <Route exact path='admin/*' element={<Admin />} ></Route> 
+        
+      </Routes>
+      <Routes>
+          <Route exact path='app/*' element={<HomePage />} ></Route>
+      </Routes>
+      <Routes>
+          <Route exact path='/' element={<HomePage />} ></Route>
+      </Routes>
+    </Router>
+    
     </>
+    
   );
 }
 

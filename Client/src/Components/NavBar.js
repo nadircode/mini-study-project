@@ -1,3 +1,7 @@
+import { Dropdown } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import logo from './Images/Logo.png';
+
 
 function NavBar(){
     return(
@@ -7,46 +11,17 @@ function NavBar(){
                 <div className="container-fluid">
                     <a className="navbar-brand">
                         <img
-                            src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
-                            height="25"
-                            alt=""
-                            loading="lazy"
-                            style={{width : "60px"}}
+                            src={logo}
+                            width='60'
                         />
                     </a>
                     <ul className="navbar-nav ms-auto d-flex flex-row">
-                        <li className="nav-item dropdown">
-                        <a
-                            class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow"
-                            href="#"
-                            id="navbarDropdownMenuLink"
-                            role="button"
-                            data-mdb-toggle="dropdown"
-                            aria-expanded="false"
-                            >
-                            <i className="bi bi-bell"></i>
-                            <span className="badge rounded-pill badge-notification bg-danger">1</span>
-                        </a>
-                        <ul
-                        className="dropdown-menu dropdown-menu-end"
-                        aria-labelledby="navbarDropdownMenuLink"
-                        >
-                        <li><a className="dropdown-item" href="#">Some news</a></li>
-                        <li><a className="dropdown-item" href="#">Another news</a></li>
-                        <li>
-                        <a className="dropdown-item" href="#">Something else here</a>
-                        </li>
-                        </ul>
-                        </li>
+                        
+                        
 
                         <li class="nav-item dropdown">
           <a
-             class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center"
-             href="#"
-             id="navbarDropdownMenuLink"
-             role="button"
-             data-mdb-toggle="dropdown"
-             aria-expanded="false"
+             class="nav-link  hidden-arrow d-flex align-items-center"
              >
             <img
                  src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
@@ -57,15 +32,19 @@ function NavBar(){
 
                  style={{width : "25px"}}
                  />
+                 <Dropdown>
+                    <Dropdown.Toggle variant="light" id="dropdown-basic" className='btn-dropdown'>
+                        
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                       <Link to="/app" replace> <Dropdown.Item href="#/action-1">Go to Home Page</Dropdown.Item></Link>
+                        <Dropdown.Item href="#/action-2">Product</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Se Déconnecter</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
           </a>
-          <ul
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="navbarDropdownMenuLink"
-              >
-            <li><a class="dropdown-item" href="#">My profile</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
-          </ul>
+          
         </li>
 
                     </ul>

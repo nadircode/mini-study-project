@@ -3,23 +3,27 @@ import { useEffect, useState } from 'react'
 import { useNavigate , Link } from 'react-router-dom'
 import './Favourite.css'
 
-export default function Favourite(){
+export default function ChartProduct(){
 
-    const [favouriteItem , setFavouriteItem] = useState([])
+    const [panierItem , setPanierItem] = useState([])
     const [loading , setLoading] = useState(false)
     const [refresh , setRefresh] = useState(false)
+
+    const [panierProduct , setPanierProduct] = useState([])
     let navigate = useNavigate()
 
     useEffect(()=>{
         let isMounted = true ;
-        Axios.get("http://localhost:8000/get_favourite_article").then((res)=>{
-            if(isMounted){
-                setLoading(true)
-                setFavouriteItem(res.data)
-                console.log(favouriteItem)
-                setRefresh(false)
-            }
-        })
+        if(isMounted){
+            console.log(JSON.parse(localStorage.getItem('productPanier')))
+            let data = JSON.parse(localStorage.getItem('productPanier'))
+            console.log(data)
+            setPanierItem(data)
+            setRefresh(false)
+
+            setLoading(true)
+            console.log(panierItem)
+        }
         return ()=>{
             isMounted = false ;
         };
@@ -80,24 +84,18 @@ export default function Favourite(){
 		}
 	}
     let IDarticle = 0
-    const [msg , setMsg] = useState('')
-    let delete_favourite_article = (p)=>{
-        Axios.post("http://localhost:8000/delete_favourite_article",{
-            IDarticle : p.IDarticle
-        }).then((res)=>{
-            console.log(res.data)
-            setMsg("Success");
-            setRefresh(true)
-        })
-    }
+    // const [msg , setMsg] = useState('')
+    // let delete_favourite_article = (p)=>{
+        
+    // }
 
-    let get_favourite_article = ()=>{
+    let get_panier_article = ()=>{
 		if(loading==true){
-        //     if(p_details != null && p_details.imgone != undefined){
+            if(panierItem != null){
                 return(
-					<>
 					
-					{ favouriteItem.map((p)=>(
+					<>
+					 {panierItem.map((p)=>(
                         <div class="row p-2 bg-white border rounded my-2" key={p.IDarticle}>
                         <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image " src={require(`../Images/categorie/${p.imgone}.jpg`)} /></div>
                         <div class="col-md-6 mt-1">
@@ -116,23 +114,20 @@ export default function Favourite(){
                     <h6 class="text-success">Free shipping</h6>
                     <div class="d-flex flex-column mt-4">
                     <Link className='btn btn-primary btn-sm' to={`/app/Products/${p.category}/${p.sous_category}/${p.nom_article}/${p.IDarticle}`} replace>
-                        <button class="btn btn-primary btn-sm" type="button"
-                            // onClick={()=>{
-                            //     navigate(`app/Products/${p.category}/${p.sous_category}/${p.nom_article}/${p.IDarticle}` );
-                            // }} 
-                            >
+                        <button class="btn btn-primary btn-sm" type="button">
                                 Details
                         </button>
-                        </Link>
+                    </Link>
                         <button class="btn btn-danger btn-sm mt-2" type="button" onClick={()=>{delete_favourite_article(p)}}>Supprimer</button>
                     </div>
                 </div>
                     </div>
                     ))
-                    }
-					</>	
-                )
-        //     }
+                }
+					</>
+                        )
+            }
+            
         }
         else if(loading == false){
             return(
@@ -150,8 +145,8 @@ export default function Favourite(){
         <div class="container mt-5 mb-5">
             <div class="d-flex justify-content-center row">
                 <div class="col-md-10">
-                    <h1><i className='bi bi-heart'></i>Favourites</h1>
-                    { get_favourite_article()}
+                    <h1><i className='bi bi-cart'></i>Panier</h1>
+                    { get_panier_article()}
                 </div>
             </div>
         </div>

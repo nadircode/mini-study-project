@@ -22,16 +22,16 @@ const db = mysql.createConnection({
 /* User*/
 app.post("/create_user" , (req,res) =>{
     console.log(req.body.fullname_Client);
-    const idClient = req.body.idClient;
+    // const idClient = req.body.idClient;
     const fullname_Client = req.body.fullname_Client ;
     const email_Client = req.body.email_Client ;
     const mdp_Client  = req.body.mdp_Client ;
-    const code_mdp_oublie = req.body.code_mdp_oublie;
+    // const code_mdp_oublie = req.body.code_mdp_oublie;
     const date_inscription = req.body.date_inscription;
     const etat_ban = req.body.etat_ban;
 
-    db.query("INSERT INTO client (idClient,fullname_Client,email_Client,mdp_Client,code_mdp_oublie,date_inscription,etat_ban) VALUES (?,?,?,?,?,?,?)",
-    [idClient,fullname_Client , email_Client , mdp_Client , code_mdp_oublie , date_inscription , etat_ban ] , (err,result)=>{
+    db.query("INSERT INTO client (fullname_Client,email_Client,mdp_Client,date_inscription,etat_ban) VALUES (?,?,?,?,?)",
+    [fullname_Client , email_Client ,mdp_Client, date_inscription , etat_ban ] , (err,result)=>{
         if(err) {console.log(err);}
         else {
             res.send("Value inserted");
@@ -257,7 +257,7 @@ app.post("/delete_favourite_article" , (req,res)=>{
 
 app.post("/get_sous_category" , (req,res)=>{
     const sous_category = req.body.sous_category;
-    console.log(sous_category);
+    // console.log(sous_category);
     db.query("SELECT * FROM article WHERE sous_category = ? " ,[sous_category] , (err,result)=>{
         if(err){
             console.log(err);
@@ -278,7 +278,28 @@ app.post("/get_sous_category" , (req,res)=>{
     })
 })
 
-
+app.post("/get_product_item" , (req,res)=>{
+    const sous_category = req.body.sous_category_v;
+    console.log(sous_category);
+    db.query("SELECT * FROM article WHERE sous_category = ? " ,[sous_category] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                // role : "Client"
+            });
+            }
+        }
+    })
+})
 
 
 

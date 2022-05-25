@@ -62,8 +62,8 @@ function Trends(){
                                 {/* <ul className='d-flex flex-row list-group'> */}
                                 <div className='btn-product ml-5'>
                                     <a className='' href='#'><i class="bi bi-box"></i></a>
-                                    <a href='#'><i class="bi bi-heart"></i></a>
-                                    <a href='#'><i class="bi bi-cart"></i></a>
+                                    {/* <a href='#'><i class="bi bi-heart"></i></a>
+                                    <a href='#'><i class="bi bi-cart"></i></a> */}
                                 </div>
                                 {/* </ul> */}
                             </div>
