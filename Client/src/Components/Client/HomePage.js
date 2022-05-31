@@ -19,7 +19,7 @@ import {
 import { useEffect } from 'react';
 function HomePage(){
 
-    let navigate = useNavigate();
+    // let navigate = useNavigate();
 
 
     return(
@@ -36,6 +36,7 @@ function HomePage(){
                 <Route exact path='/product_item/:category/:sous_category' element={<Product />} ></Route>  
                 <Route exact path='/Favourite' element={<Favourite />}></Route>
                 <Route exact path='/Panier' element={<ChartProduct />}></Route>
+                <Route exact path='/user/:bool' element={<Trends />}></Route>
             </Routes>
             
             

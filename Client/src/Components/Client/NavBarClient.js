@@ -1,21 +1,26 @@
 import './NavBarClient.css';
 // import pic from '../Images/Logo.png'
+import AuthClient from './AuthClient';
 import {Button , Form, Modal ,Dropdown , FloatingLabel } from 'react-bootstrap';
 import {
     BrowserRouter as Router , 
   Routes,
   Route,
   Link , 
-  useNavigate
+  useNavigate,
+  useParams
 } from "react-router-dom";
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import Product_Details from './Product_Details';
 import Axios from 'axios';
 import logo from '../Images/Logo.png'
 
 
-function NavBarClient(){
+function NavBarClient(props){
    /* SignUp*/ 
+
+    let {bool} = useParams()
+
     const [idClient , setIdClient] = useState();
     const [fullname_Client , setFullname_Client] = useState("");
     const [email_Client , setEmail_Client] = useState("");
@@ -38,14 +43,37 @@ function NavBarClient(){
     const [showSignup , setShowSignup] = useState(false);
 
     const handleClose_L = () => setShowLogin(false);
-    const handleShow_L = () => {setShowLogin(true); setShowSignup(false)}
+    const handleShow_L = () => {setShowLogin(true); setShowSignup(false);  setError('') ; setLoginBtn(true)}
 
     const handleClose_S = () => setShowSignup(false);
     const handleShow_S = () => {setShowSignup(true); setShowLogin(false);}
 
     const [clientList , setClientList] = useState([]);
 
+    const [loading , setLoading] = useState(false);
+    const [refresh , setRefresh] = useState(false)
     let navigate = useNavigate()
+
+    const[error , setError] = useState('')
+
+    let isLogin = null ;
+
+    const [clinetAuth , setclientAuth] = useState([])
+
+    useEffect(()=>{
+        console.log(clinetAuth.isLogin)
+        if(clinetAuth.isLogin == true){
+            setAuth(true)
+        }
+        else {
+            setAuth(false)
+        }
+    },[clinetAuth.isLogin])
+    const [auth , setAuth] = useState(false)
+
+    // useEffect(()=>{
+    //     setAuth(AuthClient.isAuthClient)
+    // },[])
 
     const addClient  = ()=>{
         let time = new Date()
@@ -74,6 +102,10 @@ function NavBarClient(){
         })
     }
 
+    
+    const [loginBtn , setLoginBtn] = useState(true)
+    
+
     const loginClient = ()=>{
         if(emailLogin == 'admin@gmail.com' && mdpLogin == 'admin'){
             navigate('/admin');
@@ -85,17 +117,45 @@ function NavBarClient(){
             mdpLogin : mdpLogin
         }).then((response)=>{
             console.log(response.data);
-            console.log(response.data.role);
+            setclientAuth(response.data)
+            if(clinetAuth.isLogin){
+                setAuth(true)
+                handleClose_L()
+            }
+            else{
+                setError('Wrong Email or Pasword')
+            }
+            // if(loading== true){
+            //     if(clinetAuth.length >0){
+            //         AuthClient.login(()=>{
+            //             bool = 'true'
+            //             window.history.pushState({},'',`app/user/${bool}`)
+            //         })
+                    
+            //         console.log("true")
+                    
+            //         AuthClient.isAuthClient = true ;
+            //         // setAuth(AuthClient.isAuthClient)
+            //     }
+            //     else {
+            //         setError('Wrong Email or Pasword')
+            //         console.log("false")
+            //     }
+            // }
+            // else {
+            //     setLoginBtn(false)
+            // }
         });
-
-        Axios.post("http://localhost:8000/admin", {
-            emailLogin : emailLogin ,
-            mdpLogin : mdpLogin
-        }).then((response)=>{
-            console.log(response.data)
-            console.log(response.data.role);
-        })
+         
     }
+    }
+
+    let logoutClient = ()=>{
+        Axios.post("http://localhost:8000/logoutclient",{
+            isLogin : false
+        })
+        setAuth(false) ; 
+        clinetAuth.isLogin == false;
     }
 
     let keyPress = (e)=>{
@@ -138,12 +198,20 @@ function NavBarClient(){
                 <div className='col-3'>
                     <div className='btn-navbar'>
                     {/* <button className='panier border-0 btn'><i class="bi bi-cart"></i></button> */}
+                    {auth== false ?
+                    <>
                     <Button variant='outline-light' onClick={handleShow_L}>
                         Login
                     </Button>
                     <Button variant='light' onClick={handleShow_S}>
                         SignUp
                     </Button>
+                    </>
+                    : 
+                    <Button variant='light' onClick={logoutClient}>
+                        Se Déconnecter
+                    </Button>
+                    }
                     {/* <button className='btn btn-outline-light'>Login</button>
                     <button className='btn btn-light '>SignUp</button> */}
                     </div>
@@ -152,21 +220,37 @@ function NavBarClient(){
                 
             </div>
             {/* Login Modal*/ }
-            <Modal show={showLogin} onHide={handleClose_L} onKeyPress={keyPress}>
+            <Modal show={showLogin} onHide={handleClose_L} onKeyPress={keyPress} >
                     <Modal.Header closeButton>
                         <Modal.Title className='modal-title w-100 font-weight-bold'><h4>Login</h4></Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                    
+                    <div style={{color : 'red'}}>{error}</div>
                     <FloatingLabel
                         controlId="floatingInput"
                         label="Email address"
                         className="mb-3 h-1"
                         style={{"font-size" : "14px"}}
                     >
-                        <Form.Control type="email" placeholder="name@example.com" style={{height : "50px"}} onChange={(e)=>{setEmailLogin(e.target.value)}} />
+                        <Form.Control 
+                        type="email" 
+                        placeholder="name@example.com" 
+                        style={{height : "50px"}}
+                        onChange={(e)=>{setEmailLogin(e.target.value)}}
+                        required 
+                        isValid={emailLogin!=''} 
+                        isInvalid={emailLogin == ''}
+                        />
                     </FloatingLabel>
                     <FloatingLabel controlId="floatingPassword" label="Password" style={{"font-size" : "14px"}}>
-                        <Form.Control type="password" placeholder="Password" style={{height : "50px"}} onChange={(e)=>{setMdpLogin(e.target.value)}} />
+                        <Form.Control 
+                        type="password" 
+                        placeholder="Password" 
+                        style={{height : "50px"}} 
+                        onChange={(e)=>{setMdpLogin(e.target.value)}} 
+                        isValid={mdpLogin.length > 5}
+                        isInvalid={mdpLogin <6}/>
                     </FloatingLabel>
                     <div className='justify-content-center list-group-item my-1' style={{marginLeft : "10rem"}}>
                         <a href='/forgot-password'>forgot password?</a>
@@ -175,15 +259,19 @@ function NavBarClient(){
                     <Button 
                     variant="primary" 
                     size="lg" 
+                    type='submit'
                     onClick={loginClient}
-                    
                     >
-                        Login
+                        {loginBtn ? 'Login' 
+                        : <div class="spinner-border text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>}
                     </Button>
                     </div>
                     <div className='text-center'>
                     <p>Not a member? <a href="#!" onClick={handleShow_S}>Register</a></p>
                     </div>
+                   
                     </Modal.Body>
                     
             </Modal>

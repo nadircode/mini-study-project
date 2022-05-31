@@ -39,6 +39,13 @@ export default function Product_Details(){
             isMounted = false ;
         };
 	},[])
+
+
+	useEffect(()=>{
+		Axios.get("http://localhost:8000/isAuthentificated").then((response)=>{
+			console.log(response.data)
+		})
+	},[])
 	let set_Images = (p) =>{
 		if(p.imgtwo != null && p.imgthree != null)
 		{

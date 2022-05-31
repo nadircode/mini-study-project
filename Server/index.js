@@ -6,6 +6,12 @@ const multer = require('multer');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+let isAuthClient = null
+
+let setIsAuthClient = (isLogin)=>{
+    isAuthClient = isLogin ;
+}
+
 
 
 app.use(cors());
@@ -50,16 +56,34 @@ app.post("/client",(req,res)=>{
         }
         else{
             if(result){
-                res.send(result);
+                // res.send(result);
+                res.json({isLogin : true , id : result[0].IDarticle , result : result});
+                setIsAuthClient(true);
             }
             else{
-                res.send({message : "Wrong email or Password " , role : "admin"});
+                res.send({isLogin : false});
             }
             
         }
     })
 
     
+});
+
+app.post("/logoutclient" , (req,res)=>{
+    setIsAuthClient(req.body.isLogin);
+    console.log(isAuthClient);
+})
+
+app.get("/isAuthentificated",(req,res)=>{
+    console.log(isAuthClient);
+    if(isAuthClient){
+        res.json({auth : true});
+        
+    }
+    else {
+        res.json({auth : false});
+    }
 })
 
 app.post("/admin" , (req,res)=>{
@@ -75,9 +99,7 @@ app.post("/admin" , (req,res)=>{
                 // res.send({role : "Admin"});
             }
             else {
-                res.send({message : "wrong email or Password" , 
-                role : "Client"
-            });
+                res.send({message : "wrong email or Password"  });
             }
         }
     })

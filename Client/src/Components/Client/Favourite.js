@@ -25,6 +25,8 @@ export default function Favourite(){
         };
     },[refresh])
 
+   
+
     let set_Stars = (p)=>{
 		if(p.nbr_etoile == 0){
 			return (
