@@ -2,6 +2,7 @@ import './Product_Details.css'
 import Comment from './Comment'
 import {useParams} from 'react-router-dom'
 import { useEffect, useState } from 'react';
+import {Button , Form, Modal} from 'react-bootstrap';
 import Axios  from 'axios';
 export default function Product_Details(){
 
@@ -13,6 +14,7 @@ export default function Product_Details(){
 	const [p_details , setpDetails ] = useState([]);
 
 	const [loading , setLoading] = useState(false)
+	const [refresh , setRefresh] = useState(false)
 
 	const [panier , setPanier] = useState([{
 		IDarticle : null, 
@@ -31,6 +33,7 @@ export default function Product_Details(){
 			// console.log(response.data)
 			if(isMounted){
 			setLoading(true)
+			setRefresh(true)
 			setpDetails(response.data);
 			console.log(p_details);
 			}
@@ -39,6 +42,29 @@ export default function Product_Details(){
             isMounted = false ;
         };
 	},[])
+
+	const [auth , setAuth] = useState(null)
+	const [idClient , setIdClient] = useState()
+	const [fullname_Client , setFullname_Client] = useState()
+
+	useEffect(()=>{
+        let isMounted = true ;
+        if(isMounted){
+            console.log(JSON.parse(localStorage.getItem('isLogin')))
+            let data = JSON.parse(localStorage.getItem('isLogin'))
+            console.log(data)
+            setAuth(data[data.length - 1].isLogin)
+			setIdClient(data[data.length - 1].idClient)
+			setFullname_Client(data[data.length - 1].fullname_Client)
+            // setRefresh(false)
+
+            // setLoading(true)
+            // console.log(panierItem)
+        }
+        return ()=>{
+            isMounted = false ;
+        };
+    },[refresh])
 
 
 	useEffect(()=>{
@@ -209,9 +235,52 @@ export default function Product_Details(){
 							<button class="like btn btn-default" type="button" onClick={()=>{add_tofavourites(p)}}><span class="fa fa-heart"></span></button>
 						</div>
                         <div className='btn-commander mt-2'>
-                            <button type='button' className='btn btn-lg btn-danger'>Commander</button>
+                            <button 
+							type='button'
+							 className='btn btn-lg btn-danger'
+							 onClick={commande}
+							>Commander</button>
                         </div>
 					</div>
+					<Modal show={showForms} onHide={closeForms}>
+                <Modal.Header closeButton>
+                <Modal.Title>
+                    Commander Produit
+                </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+					<Form.Group>
+                            <Form.Label>Nombre de Produits</Form.Label>
+                            <Form.Control type='number' placeholder='Nombre de Produit' onChange={(e)=>{setNombre_besoin(e.target.value)}} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Wilaya</Form.Label>
+                            <Form.Control type='text' placeholder='Wilaya' onChange={(e)=>{setWilaya(e.target.value)}} />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Ville</Form.Label>
+                            <Form.Control type='text' placeholder='Ville' onChange={(e)=>{setVille(e.target.value)}} />
+                        </Form.Group>
+						<Form.Group>
+                            <Form.Label>Numéro de Telephone</Form.Label>
+                            <Form.Control type='tel' placeholder='numéro de Telephone' onChange={(e)=>{setPhoneNumber(e.target.value)}} />
+                        </Form.Group>
+						<Form.Group>
+                            <Form.Label>Adresse</Form.Label>
+                            <Form.Control type='text' placeholder='Adresse' onChange={(e)=>{setAdresse(e.target.value)}} />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="danger" onClick={closeForms}>
+                    Annuler
+                </Button>
+                <Button variant="primary" onClick={()=>{continuerCommande(p)}}>
+                    Commander
+                </Button>
+                </Modal.Footer>
+            </Modal>
 				</div>
 					))}
 					</>	
@@ -229,6 +298,52 @@ export default function Product_Details(){
             )
         }
 	}
+	const [showForms , setShowForms] = useState(null)
+	const closeForms = ()=>{setShowForms(false)}
+
+	const [wilaya , setWilaya] = useState('')
+	const [nombre_besoin , setNombre_besoin] = useState('')
+	const [ville , setVille] = useState('')
+	const [addresse , setAdresse] = useState('')
+	const [phoneNumber , setPhoneNumber] = useState('')
+
+	let commande = ()=>{
+		if(auth){
+			setShowForms(true)
+		}
+		else {
+			alert("You are not Login")
+		}
+	}
+	let date_achat = '' 
+	let date_delivery = ''
+	let status = ''
+
+
+	let continuerCommande = (p)=>{
+		const time = new Date();
+		Axios.post("http://localhost:8000/commande",{
+			nom_article : p.nom_article , 
+			prix : p.prix ,
+			nombre_besoin : nombre_besoin ,
+			fullname_Client : fullname_Client ,
+			imgone : p.imgone , 
+			numero_tel : phoneNumber ,
+			date_achat : `${time.getDay()}/${time.getMonth()}/${time.getFullYear()}` ,
+			date_delivery : `${time.getDay() + 5}/${time.getMonth()}/${time.getFullYear()}` ,
+			wilaya : wilaya ,
+			addresse : addresse ,
+			ville : ville ,
+			status : 'en cours' ,
+			idClient : idClient , 
+			IDarticle : p.IDarticle
+			
+		}).then((response)=>{
+			console.log(response)
+		})
+	}
+
+
 
     return (
         <>
@@ -239,6 +354,7 @@ export default function Product_Details(){
 				{get_productDetails()}
 			</div>
 		</div>
+		
 	</div>
     <Comment />
     </>

@@ -7,6 +7,7 @@ import Product from './Components/Admin/Product';
 import Orders from './Components/Admin/Orders';
 import HomePage from './Components/Client/HomePage';
 import Admin from './Components/Admin/Admin';
+import MyOrders from '../src/Components/Client/MyOrders';
 import {
   BrowserRouter as Router , 
 Routes,
@@ -29,6 +30,10 @@ function App() {
       <Routes>
           <Route exact path='/' element={<HomePage />} ></Route>
       </Routes>
+      <Routes>
+          <Route exact path='/mes_commandes' element={<MyOrders />} ></Route>
+      </Routes>
+
     </Router>
     
     </>

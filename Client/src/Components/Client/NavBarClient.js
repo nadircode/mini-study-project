@@ -71,9 +71,23 @@ function NavBarClient(props){
     },[clinetAuth.isLogin])
     const [auth , setAuth] = useState(false)
 
-    // useEffect(()=>{
-    //     setAuth(AuthClient.isAuthClient)
-    // },[])
+    useEffect(()=>{
+        let isMounted = true ;
+        if(isMounted){
+            console.log(JSON.parse(localStorage.getItem('isLogin')))
+            let data = JSON.parse(localStorage.getItem('isLogin')) || [] ;
+            console.log(data)
+            if(data.length > 0 ){setAuth(data[data.length - 1].isLogin)}
+            
+            // setRefresh(false)
+
+            // setLoading(true)
+            // console.log(panierItem)
+        }
+        return ()=>{
+            isMounted = false ;
+        };
+    },[refresh])
 
     const addClient  = ()=>{
         let time = new Date()
@@ -104,9 +118,14 @@ function NavBarClient(props){
 
     
     const [loginBtn , setLoginBtn] = useState(true)
-    
 
-    const loginClient = ()=>{
+    const [client , setClient] = useState([]);
+
+    
+    let IDClient = null
+
+    let loginClient = ()=>{
+        let name_Client = ''
         if(emailLogin == 'admin@gmail.com' && mdpLogin == 'admin'){
             navigate('/admin');
             console.log('Admin')
@@ -118,39 +137,37 @@ function NavBarClient(props){
         }).then((response)=>{
             console.log(response.data);
             setclientAuth(response.data)
+            // setClient(response.data)
             if(clinetAuth.isLogin){
                 setAuth(true)
-                handleClose_L()
+                setShowLogin(false)
+                let olditems = JSON.parse(localStorage.getItem('isLogin')) || [] ;
+                var newItem = {
+                    isLogin : true ,
+                    fullname_Client : clinetAuth.fullname_Client ,
+                    idClient : clinetAuth.idClient
+                }
+                olditems.push(newItem)
+                console.log(newItem)
+                localStorage.setItem('isLogin' ,JSON.stringify(olditems) );
             }
             else{
                 setError('Wrong Email or Pasword')
             }
-            // if(loading== true){
-            //     if(clinetAuth.length >0){
-            //         AuthClient.login(()=>{
-            //             bool = 'true'
-            //             window.history.pushState({},'',`app/user/${bool}`)
-            //         })
-                    
-            //         console.log("true")
-                    
-            //         AuthClient.isAuthClient = true ;
-            //         // setAuth(AuthClient.isAuthClient)
-            //     }
-            //     else {
-            //         setError('Wrong Email or Pasword')
-            //         console.log("false")
-            //     }
-            // }
-            // else {
-            //     setLoginBtn(false)
-            // }
+            
         });
          
     }
     }
 
     let logoutClient = ()=>{
+        
+        let olditems = JSON.parse(localStorage.getItem('isLogin')) || [];
+                var newItem = {
+                    isLogin : false
+                }
+        olditems.push(newItem)
+        localStorage.setItem('isLogin' ,JSON.stringify(olditems) );
         Axios.post("http://localhost:8000/logoutclient",{
             isLogin : false
         })
@@ -208,9 +225,23 @@ function NavBarClient(props){
                     </Button>
                     </>
                     : 
+                    <>
+                    <Button variant='outline-light'>
+                 <Dropdown>
+                    <Dropdown.Toggle variant="light" id="dropdown-basic" className='btn-dropdown'>
+                        
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item onClick={()=>{window.open("http://localhost:3000/mes_commandes" , "_blank")}}>Mes Commandes</Dropdown.Item>
+                        
+                    </Dropdown.Menu>
+                </Dropdown>
+                     </Button>
                     <Button variant='light' onClick={logoutClient}>
                         Se Déconnecter
                     </Button>
+                    </>
                     }
                     {/* <button className='btn btn-outline-light'>Login</button>
                     <button className='btn btn-light '>SignUp</button> */}
@@ -220,11 +251,12 @@ function NavBarClient(props){
                 
             </div>
             {/* Login Modal*/ }
-            <Modal show={showLogin} onHide={handleClose_L} onKeyPress={keyPress} >
+            <Modal show={showLogin} onHide={handleClose_L} onKeyPress={keyPress}  >
                     <Modal.Header closeButton>
                         <Modal.Title className='modal-title w-100 font-weight-bold'><h4>Login</h4></Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body >
+                   
                     
                     <div style={{color : 'red'}}>{error}</div>
                     <FloatingLabel
@@ -271,7 +303,7 @@ function NavBarClient(props){
                     <div className='text-center'>
                     <p>Not a member? <a href="#!" onClick={handleShow_S}>Register</a></p>
                     </div>
-                   
+                    
                     </Modal.Body>
                     
             </Modal>

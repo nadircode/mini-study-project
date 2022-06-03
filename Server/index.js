@@ -57,7 +57,7 @@ app.post("/client",(req,res)=>{
         else{
             if(result){
                 // res.send(result);
-                res.json({isLogin : true , id : result[0].IDarticle , result : result});
+                res.json({isLogin : true , fullname_Client : result[0].fullname_Client , idClient : result[0].idClient });
                 setIsAuthClient(true);
             }
             else{
@@ -323,6 +323,115 @@ app.post("/get_product_item" , (req,res)=>{
     })
 })
 
+app.post("/commande",(req,res)=>{
+    const nom_article = req.body.nom_article;
+    const prix = req.body.prix;
+    const nombre_besoin = req.body.nombre_besoin;
+    const fullname_Client = req.body.fullname_Client;
+    const imgone = req.body.imgone ;
+    const numero_tel = req.body.numero_tel ;
+    const date_achat = req.body.date_achat;
+    const date_delivery = req.body.date_delivery ;
+    const wilaya = req.body.wilaya ;
+    const addresse = req.body.addresse;
+    const ville = req.body.ville ;
+    const status = req.body.status ;
+    const idClient = req.body.idClient;
+    const IDarticle = req.body.IDarticle;
+    db.query("INSERT INTO commande(nom_article,prix,nombre_besoin,fullname_Client,date_achat,date_delivery,imgone,numero_tel,wilaya,addresse,ville,status,idClient,IDarticle) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    [nom_article,prix,nombre_besoin,fullname_Client,date_achat,date_delivery,imgone,numero_tel,wilaya,addresse,ville,status,idClient,IDarticle] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.json({Send : 'good' , message : "Success"});
+            }
+            else {
+                res.send({message : "Error with Adding Data to DataBase"});
+            }
+        }
+    })
+})
+
+app.get("/get_commande",(req,res)=>{
+    db.query("SELECT * FROM commande" , (err,result)=>{
+        if(err){
+            console.log(err)
+        }
+        else {
+            // console.log(result);
+            res.send(result);
+        }
+    })
+})
+
+app.post("/get_commande_per_client" , (req,res)=>{
+    const idClient = req.body.idClient;
+    db.query("SELECT * FROM commande WHERE idClient = ? " ,[idClient] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+            }
+            else {
+                res.send({message : "Error with fetching Orders Product" , 
+                
+            });
+            }
+        }
+    })
+})
+
+app.put("/set_status_confirm" , (req,res)=>{
+    const status = req.body.status
+    const idCommande = req.body.idCommande ;
+    console.log(idCommande);
+    console.log(status);
+    db.query("UPDATE commande SET status = ? WHERE idCommande = ?" ,[status , idCommande] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+            }
+            else {
+                res.send({message : "Error with fetching Orders Product" , 
+                
+            });
+            }
+        }
+    })
+})
+
+app.put("/set_status_cancel" , (req,res)=>{
+    const status = req.body.status
+    const idCommande = req.body.idCommande ;
+    console.log(idCommande);
+    console.log(status);
+    db.query("UPDATE commande SET status = ? WHERE idCommande = ?" ,[status , idCommande] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+            }
+            else {
+                res.send({message : "Error with fetching Orders Product" , 
+                
+            });
+            }
+        }
+    })
+})
 
 
 app.listen(8000 , ()=>{
