@@ -111,7 +111,7 @@ export default function Filter({items}){
                                 </div>
                                 <Link to={`/app/Products/${p.category}/${p.sous_category}/${p.nom_article}/${p.IDarticle}`} replace>
                                 <div class="btn btn-primary" 
-                                >Acheter</div>
+                                >Details</div>
                                 </Link>
                             </div>
                         </div>

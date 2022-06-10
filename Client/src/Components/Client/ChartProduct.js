@@ -8,21 +8,41 @@ export default function ChartProduct(){
     const [panierItem , setPanierItem] = useState([])
     const [loading , setLoading] = useState(false)
     const [refresh , setRefresh] = useState(false)
-
-    const [panierProduct , setPanierProduct] = useState([])
     let navigate = useNavigate()
+    const [auth , setAuth] = useState(false)
+
+    const [idClient , setIdClient] = useState()
 
     useEffect(()=>{
         let isMounted = true ;
         if(isMounted){
-            console.log(JSON.parse(localStorage.getItem('productPanier')))
-            let data = JSON.parse(localStorage.getItem('productPanier'))
+            console.log(JSON.parse(localStorage.getItem('isLogin')))
+            let data = JSON.parse(localStorage.getItem('isLogin'))
             console.log(data)
-            setPanierItem(data)
-            setRefresh(false)
+            setAuth(data[data.length - 1].isLogin)
+			setIdClient(data[data.length - 1].idClient)
+			// setFullname_Client(data[data.length - 1].fullname_Client)
+            // setRefresh(false)
 
-            setLoading(true)
-            console.log(panierItem)
+            // setLoading(true)
+            // console.log(panierItem)
+        }
+        return ()=>{
+            isMounted = false ;
+        };
+    },[])
+
+    useEffect(()=>{
+        let isMounted = true ;
+        if(isMounted){
+            
+                Axios.post("http://localhost:8000/get_panier",{
+                    idClient : idClient
+                }).then((response)=>{
+                    setPanierItem(response.data)
+                })
+            
+            
         }
         return ()=>{
             isMounted = false ;

@@ -1,6 +1,6 @@
 import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import logo from './Images/Logo.png';
+import logo from './Images/Logo2.png';
 
 
 function NavBar(){

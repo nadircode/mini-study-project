@@ -27,20 +27,27 @@ const db = mysql.createConnection({
 }); 
 /* User*/
 app.post("/create_user" , (req,res) =>{
-    console.log(req.body.fullname_Client);
-    // const idClient = req.body.idClient;
+    
+    
     const fullname_Client = req.body.fullname_Client ;
     const email_Client = req.body.email_Client ;
     const mdp_Client  = req.body.mdp_Client ;
-    // const code_mdp_oublie = req.body.code_mdp_oublie;
     const date_inscription = req.body.date_inscription;
     const etat_ban = req.body.etat_ban;
+
+    console.log(fullname_Client)
+    console.log(email_Client)
+    console.log(mdp_Client)
+    console.log(date_inscription)
+    console.log(etat_ban)
+    
+    
 
     db.query("INSERT INTO client (fullname_Client,email_Client,mdp_Client,date_inscription,etat_ban) VALUES (?,?,?,?,?)",
     [fullname_Client , email_Client ,mdp_Client, date_inscription , etat_ban ] , (err,result)=>{
         if(err) {console.log(err);}
         else {
-            res.send("Value inserted");
+            res.json({status : true})
             console.log("IS worked GET");
         }
     })
@@ -196,6 +203,58 @@ app.post("/product_details" , (req,res)=>{
             if(result.length > 0){
                 
                 res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                // role : "Client"
+            });
+            }
+        }
+    })
+})
+
+app.post("/add_to_chart",(req,res)=>{
+    const quantite = req.body.quantite ;
+    const idclient = req.body.idclient ;
+    const idarticle = req.body.idarticle ;
+
+    console.log(idclient)
+    console.log(idarticle);
+
+    db.query("INSERT INTO panier (quantite,idclient,idarticle) VALUES (?,?,?)",
+    [quantite , idclient , idarticle] , 
+    (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.json({progress : true});
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with Inserting Data "
+            });
+            }
+        }
+    })
+})
+
+app.post("/get_panier" , (req,res)=>{
+    const idclient = req.body.idClient;
+    console.log(idclient);
+    db.query("SELECT * FROM panier WHERE idclient = ? " ,[idclient] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.json({status : true});
                 // console.log(result);
                 // res.send({role : "Admin"});
             }

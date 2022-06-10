@@ -16,6 +16,11 @@ export default function Product_Details(){
 	const [loading , setLoading] = useState(false)
 	const [refresh , setRefresh] = useState(false)
 
+
+	const [error , setErrorMsg] = useState('')
+
+	const [quantite , setQuantite] = useState()
+
 	const [panier , setPanier] = useState([{
 		IDarticle : null, 
 		nom_article  : '' ,
@@ -24,6 +29,9 @@ export default function Product_Details(){
 		prix : null , 
 		nbr_etoile : null
 	}]);
+
+	const [auth , setAuth] = useState(false)
+
 
 	useEffect(()=>{
 		let isMounted = true 
@@ -43,7 +51,7 @@ export default function Product_Details(){
         };
 	},[])
 
-	const [auth , setAuth] = useState(null)
+	
 	const [idClient , setIdClient] = useState()
 	const [fullname_Client , setFullname_Client] = useState()
 
@@ -164,20 +172,32 @@ export default function Product_Details(){
 	const _category = ""
 	const _sous_category = ""
 
+	let idclient = null
+
+	const [datas , setData] = useState([])
 
 	let add_toPanier = (p)=>{
-		let olditems = JSON.parse(localStorage.getItem('productPanier')) || [];
-		var newItem = {
-			IDarticle : p.IDarticle ,
-			nom_article : p.nom_article ,
-			category : p.category , 
-			sous_category : p.sous_category , 
-			imgone : p.imgone ,
-			prix : p.prix ,
-			nbr_etoile : p.nbr_etoile
-		};
-		olditems.push(newItem)
-		localStorage.setItem('productPanier' ,JSON.stringify(olditems) );	
+		if(auth){
+			if(quantite <= p.nombre_enstock){
+			Axios.post("http://localhost:8000/add_to_chart",{
+				quantite : quantite ,
+				idclient : idClient ,
+				idarticle : p.IDarticle
+			}).then((response)=>{
+				setData(response.data)
+				if(datas.progress){
+					alert("votre a éte ajouté avec succes")
+				}
+			})
+		}
+		else {
+			setErrorMsg("Cette quantité n’est pas disponible")
+		}
+			
+		}	
+		else {
+			alert("essayer de connecter ou creéer un compte");
+		}
 	}
 
 	let add_tofavourites = (p)=>{
@@ -232,14 +252,25 @@ export default function Product_Details(){
 						<p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
 						<div class="action">
 							<button class="add-to-cart btn btn-default" type="button" onClick={()=>{add_toPanier(p)}}>Ajouter au Panier</button>
-							<button class="like btn btn-default" type="button" onClick={()=>{add_tofavourites(p)}}><span class="fa fa-heart"></span></button>
+							<input 
+							type='number' 
+							style={{width : '50px' , marginLeft  : '15px' , border : '1px solid  '}}
+							onChange={(e)=>{
+								if(e.target.value > p.nombre_enstock){
+									setErrorMsg("Cette quantité n’est pas disponible")
+								}
+								else {
+									setQuantite(e.target.value)
+									setErrorMsg('')
+								}
+							}}
+							
+							/>
+							<h5 className='text-danger'>{error}</h5>
 						</div>
                         <div className='btn-commander mt-2'>
-                            <button 
-							type='button'
-							 className='btn btn-lg btn-danger'
-							 onClick={commande}
-							>Commander</button>
+						<button class="like btn btn-default" type="button" onClick={()=>{add_tofavourites(p)}}><span class="fa fa-heart"></span></button>
+						
                         </div>
 					</div>
 					<Modal show={showForms} onHide={closeForms}>

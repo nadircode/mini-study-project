@@ -8,6 +8,8 @@ import Footer from './Footer';
 import Product_Details from './Product_Details';
 import Favourite from './Favourite';
 import ChartProduct from './ChartProduct';
+import SignUp from './SignUp';
+import Login from './Login';
 
 import {
     BrowserRouter as Router , 
