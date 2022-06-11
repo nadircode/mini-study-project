@@ -254,7 +254,31 @@ app.post("/get_panier" , (req,res)=>{
         else {
             if(result.length > 0){
                 
-                res.json({status : true});
+                res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                // role : "Client"
+            });
+            }
+        }
+    })
+})
+
+app.post("/get_panier_article" , (req,res)=>{
+    const IDarticle = req.body.idarticle;
+    console.log(IDarticle);
+    db.query("SELECT * FROM article WHERE IDarticle = ? " ,[IDarticle] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                console.log(result)
                 // console.log(result);
                 // res.send({role : "Admin"});
             }
