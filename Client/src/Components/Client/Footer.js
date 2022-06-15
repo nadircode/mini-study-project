@@ -44,7 +44,7 @@ function Footer(){
                 <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
                   
                   <h6 class="text-uppercase fw-bold mb-4">
-                    <i class="fas fa-gem me-3"></i>TechBro
+                    <i class="fas fa-gem me-3"></i>TechPro
                   </h6>
                   <p>
                     Here you can use rows and columns to organize your footer content. Lorem ipsum
@@ -57,17 +57,21 @@ function Footer(){
                   <h6 class="text-uppercase fw-bold mb-4">
                     Langages Utilisées
                   </h6>
-                  <p>
-                    <a href="#!" class="text-reset">Html</a>
-                  </p>
-                  <p>
-                    <a href="#!" class="text-reset">CSS</a>
-                  </p>
+                  
                   <p>
                     <a href="#!" class="text-reset">React JS</a>
                   </p>
                   <p>
                     <a href="#!" class="text-reset">Node JS</a>
+                  </p>
+                  <p>
+                    <a href="#!" class="text-reset">Express JS</a>
+                  </p>
+                  <p>
+                    <a href="#!" class="text-reset">Bootstrap</a>
+                  </p>
+                  <p>
+                    <a href="#!" class="text-reset">MySQL</a>
                   </p>
                 </div>
                 
@@ -100,8 +104,7 @@ function Footer(){
                     <i class="fas fa-envelope me-3"></i>
                     mini_projet_tlemcen2022@example.com
                   </p>
-                  <p><i class="fas fa-phone me-3"></i> + 213 6 66 66 66 66</p>
-                  <p><i class="fas fa-print me-3"></i> + 213 6 66 66 66 66</p>
+                  
                 </div>
                 
               </div>
@@ -111,7 +114,7 @@ function Footer(){
           
           <div class="text-center p-4">
             © 2022 Copyright:
-            <a class="text-reset fw-bold" href="#">TechBro-MiniProjet-Mesmoudi-Groupe.com</a>
+            <a class="text-reset fw-bold" href="#">Mini Projet Tlemcen Mesmoudi</a>
           </div>
           
         </footer>

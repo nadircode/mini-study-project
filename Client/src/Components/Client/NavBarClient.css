@@ -2,7 +2,7 @@
     height: 100px;
     background-color: #374a52;
 }
-.flex-row > i {
+.flex-row > a > i {
     background-color: #374a52;
     color : white;
     font-weight: bold;

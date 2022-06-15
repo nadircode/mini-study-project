@@ -10,6 +10,7 @@ import Admin from './Components/Admin/Admin';
 import MyOrders from '../src/Components/Client/MyOrders';
 import Login from './Components/Client/Login';
 import SignUp from './Components/Client/SignUp';
+import ForgotPasword from './Components/Client/ForgotPasword';
 import {
   BrowserRouter as Router , 
 Routes,
@@ -32,13 +33,11 @@ function App() {
       <Routes>
           <Route exact path='/' element={<HomePage />} ></Route>
       </Routes>
-      <Routes>
-          <Route exact path='/mes_commandes' element={<MyOrders />} ></Route>
-      </Routes>
 
       <Routes>
         <Route exact path='/login' element={<Login />} ></Route>
         <Route exact path='/signup' element={<SignUp />} ></Route>
+        <Route exact path='/forgotpassword' element={<ForgotPasword />} ></Route>
       </Routes>
 
     </Router>

@@ -2,6 +2,7 @@ import './Product_Details.css'
 import Comment from './Comment'
 import {useParams} from 'react-router-dom'
 import { useEffect, useState } from 'react';
+import {Button , Form, Modal , Alert} from 'react-bootstrap';
 
 import Axios  from 'axios';
 export default function Product_Details(){
@@ -43,6 +44,26 @@ export default function Product_Details(){
 			setLoading(true)
 			setRefresh(true)
 			setpDetails(response.data);
+			console.log(p_details);
+			}
+		})
+		return ()=>{
+            isMounted = false ;
+        };
+	},[])
+
+	const [review , setReviews] = useState([])
+
+	useEffect(()=>{
+		let isMounted = true 
+		Axios.post("http://localhost:8000/get_comment",{
+			id : id
+		}).then((response)=>{
+			// console.log(response.data)
+			if(isMounted){
+			setLoading(true)
+			setRefresh(true)
+			setReviews(response.data);
 			console.log(p_details);
 			}
 		})
@@ -175,20 +196,22 @@ export default function Product_Details(){
 	let idclient = null
 
 	const [datas , setData] = useState({})
+	const [showAlert, setShowAlert] = useState(false);
 
 	let add_toPanier = (p)=>{
 		if(auth){
 			if(quantite <= p.nombre_enstock){
+			
+			setShowAlert(true)
 			Axios.post("http://localhost:8000/add_to_chart",{
 				quantite : quantite ,
 				idclient : idClient ,
 				idarticle : p.IDarticle
 			}).then((response)=>{
 				setData(response.data)
-				if(datas.progress){
-					alert("votre a éte ajouté avec succes")
-				}
+				
 			})
+			
 		}
 		else {
 			setErrorMsg("Cette quantité n’est pas disponible")
@@ -214,6 +237,10 @@ export default function Product_Details(){
 			console.log(res);
 		})
 	}
+	const [showModal , setShowModal] = useState(null)
+	const closeModal = ()=>{setShowModal(false)}
+
+	
 
 	let get_productDetails = ()=>{
 		if(loading==true){
@@ -267,14 +294,54 @@ export default function Product_Details(){
 							
 							/>
 							<h5 className='text-danger'>{error}</h5>
+							<Alert show={showAlert} variant="success">
+								<p>
+								Votre Produit est ajouté au panier avec success
+								</p>
+								<hr />
+							</Alert>
 						</div>
                         <div className='btn-commander mt-2'>
 						<button class="like btn btn-default" type="button" onClick={()=>{add_tofavourites(p)}}><span class="fa fa-heart"></span></button>
 						
                         </div>
 					</div>
-					
+					<div>
+            <h1 className='ml-9' style={{"margin-left" : "20rem"}}>Reviews</h1>
+            <section >
+				{review.map((p)=>{
+					<div class="container my-5 py-5" key={p.idreviews}>
+					<div class="row d-flex justify-content-center">
+					<div class="col-md-12 col-lg-10 col-xl-8">
+						<div class="card-comment">
+						<div class="card-body">
+							<div class="d-flex flex-start align-items-center">
+							<img class="rounded-circle shadow-1-strong me-3"
+								src="https://i.pinimg.com/564x/3f/94/70/3f9470b34a8e3f526dbdb022f9f19cf7.jpg" alt="avatar" width="60"
+								height="60" />
+							<div>
+								<h6 class="fw-bold text-primary mb-1">{p.idClient}</h6>
+								<p class="text-muted small mb-0">
+								Shared publicly {p.date_ajouter}
+								</p>
+							</div>
+							</div>
+
+							<p class="mt-3 mb-4 pb-2">
+							{p.contenu}
+							</p>
+						</div>
+						</div>
+					</div>
+					</div>
 				</div>
+				})}
+                    
+                </section>
+
+        </div>
+				</div>
+
 					))}
 					</>	
                 )
@@ -291,22 +358,6 @@ export default function Product_Details(){
             )
         }
 	}
-	const [showForms , setShowForms] = useState(null)
-	const closeForms = ()=>{setShowForms(false)}
-
-	
-
-	let commande = ()=>{
-		if(auth){
-			setShowForms(true)
-		}
-		else {
-			alert("You are not Login")
-		}
-	}
-	let date_achat = '' 
-	let date_delivery = ''
-	let status = ''
 
 
 	

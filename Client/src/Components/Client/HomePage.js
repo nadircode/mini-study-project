@@ -10,6 +10,8 @@ import Favourite from './Favourite';
 import ChartProduct from './ChartProduct';
 import SignUp from './SignUp';
 import Login from './Login';
+import Search from './Search';
+import Filtering from './Filtering';
 
 import {
     BrowserRouter as Router , 
@@ -39,6 +41,8 @@ function HomePage(){
                 <Route exact path='/Favourite' element={<Favourite />}></Route>
                 <Route exact path='/Panier' element={<ChartProduct />}></Route>
                 <Route exact path='/user/:bool' element={<Trends />}></Route>
+                <Route exact path='/search/:query' element={<Search />}></Route>
+                <Route exact path='/filter/:mins/:maxs/:ratings' element={<Filtering />}></Route>
             </Routes>
             
             

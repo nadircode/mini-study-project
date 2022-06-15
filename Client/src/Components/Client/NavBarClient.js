@@ -21,7 +21,7 @@ function NavBarClient(props){
 
     let {bool} = useParams()
 
-    
+    const [query , setQuery] = useState('')
 
 
 
@@ -56,10 +56,7 @@ function NavBarClient(props){
             console.log(data)
             if(data.length > 0 ){setAuth(data[data.length - 1].isLogin)}
             
-            // setRefresh(false)
-
-            // setLoading(true)
-            // console.log(panierItem)
+            
         }
         return ()=>{
             isMounted = false ;
@@ -99,6 +96,13 @@ function NavBarClient(props){
             loginClient();
         }
     }
+
+    let startQuery = ()=>{
+        if(query != ''){
+            window.open(`http://localhost:3000/app/search/${query}` , "_self")
+        }
+
+    }
     
     return (
         <div className='main-container sticky-top'>
@@ -115,20 +119,14 @@ function NavBarClient(props){
                 />
                 </a>
                 <div class="col-6 input d-flex flex-row">
-                <Dropdown>
-                    <Dropdown.Toggle variant="light" id="dropdown-basic" className='btn-dropdown'>
-                        All
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                        <Dropdown.Item href="#/action-1">Phone</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">Cpu</Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">Mouses</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
                     <div className='d-flex flex-row'>
-                    <input type="search" className="form-control w-5 input-search" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                    <i class="bi bi-search"></i> 
+                    <input type="search" className="form-control w-5 input-search" placeholder="Search" 
+                    onChange={(e)=>{setQuery(e.target.value)}}
+                    />
+                    <a type='button'
+                        onClick={startQuery}
+                    ><i class="bi bi-search"></i> $
+                    </a>
                     </div>
                 </div>
                 <div className='col-3'>

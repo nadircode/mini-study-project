@@ -7,43 +7,12 @@ import './Filter.css';
 
     console.log(items)
 
-    // let {sous_category} = useParams()
-    // console.log(sous_category)
-
-    // const [sous_category , setSousCategory] = useState()
-    // let sous_C = ""
+    
 
     const [product , setProduct] = useState([])
     const [loading , setLoading] = useState(false)
-    // const [sCategory , setsCategory] = useState('')
-    let sous_category = ""
-    // setSousCategory(sousCategory)
-    // const [refreSH , setRefresh] = useState(refresh ? 'true' : 'false')
     
-
-    // useEffect(()=>{
-	// 	let isMounted = true 
-    //     // console.log(sousCategory)
-    //     setItems(sousCategory)
-    //     // setSousCategory(sousCategory)
-	// 	Axios.post("http://localhost:8000/get_product_item",{
-    //         sous_category : itemS
-    //     }).then((response)=>{
-			
-	// 		if(isMounted){
-    //         // console.log(sous_C)
-    //         console.log("2")
-    //         console.log(itemS)
-    //         console.log(response.data)
-	// 		setLoading(true)
-	// 		setProduct(response.data)
-    //         // console.log(sous_category)
-	// 		}
-	// 	})
-	// 	return ()=>{
-    //         isMounted = false ;
-    //     };
-	// },[sousCategory])
+    let sous_category = ""
 
     useEffect(()=>{
         let isMounted = true 

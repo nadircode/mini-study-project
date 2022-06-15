@@ -108,7 +108,7 @@ else {
                         placeholder="name@example.com" 
                         onChange={(e)=>{setEmailLogin(e.target.value)}}
                         required 
-                        />
+            />
               <i class="fas fa-at"></i>
             </div>
           </div>
@@ -126,7 +126,7 @@ else {
               <i class="fas fa-lock"></i>
             </div>
           </div>
-
+          <a href='http://localhost:3000/forgotpassword' style={{textAlign : 'center'}}>vous avez oublié votre mot de passe ?</a>
           <button class="btn-login-signup" type="button" onClick={loginClient}>
           {loginBtn ? 'Login' 
                         : <div class="spinner-border text-light" role="status">

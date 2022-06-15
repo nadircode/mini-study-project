@@ -1,6 +1,5 @@
 import './Trends.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+
 import {Card} from 'react-bootstrap'
 import Product_Details from './Product_Details'
 import New from './New';

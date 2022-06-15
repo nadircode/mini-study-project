@@ -136,6 +136,15 @@ export default function Filter({items}){
             )
         }
     }
+    const [rating, setRating] = useState(0);
+    const [hover, setHover] = useState(0);
+
+    const [min ,setMin] = useState()
+    const [max ,setMax] = useState()
+
+    const applyQuery = ()=>{
+        window.open(`http://localhost:3000/app/filter/${min}/${max}/${rating}` , "_self")
+    }
     
     
 
@@ -144,48 +153,46 @@ export default function Filter({items}){
         <div class="content py-md-0 py-3 mx-2 filter-main d-flex flex-row">
         <section id="sidebar">
             <div class="pt-1">
-                <h5 class="font-weight-bold">Featured Brands</h5>
-                <form class="brand">
-                    <div class="form-inline d-flex align-items-center py-1"> <label class="tick">HP<input type="checkbox" /> <span class="check"></span> </label> </div>
-                    <div class="form-inline d-flex align-items-center py-1"> <label class="tick">SanDisk <input type="checkbox" checked /> <span class="check"></span> </label> </div>
-                    <div class="form-inline d-flex align-items-center py-1"> <label class="tick">Apple <input type="checkbox" checked /> <span class="check"></span> </label> </div>
-                    <div class="form-inline d-flex align-items-center py-1"> <label class="tick">LogiTech <input type="checkbox" /> <span class="check"></span> </label> </div>
-                    <div class="form-inline d-flex align-items-center py-1"> <label class="tick">Known <input type="checkbox" /> <span class="check"></span> </label> </div>
-                </form>
-            </div>
-            <div class="pt-1">
                 <h5 class="font-weight-bold">Rating</h5>
                 <form class="rating">
-                    <div class="form-inline d-flex align-items-center py-2"> <label class="tick"><span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="fas fa-star"></span> <input type="checkbox" /> <span class="check"></span> </label> </div>
-                    <div class="form-inline d-flex align-items-center py-2"> <label class="tick"> <span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="far fa-star px-1 text-muted"></span> <input type="checkbox" /> <span class="check"></span> </label> </div>
-                    <div class="form-inline d-flex align-items-center py-2"> <label class="tick"><span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="far fa-star px-1 text-muted"></span> <span class="far fa-star px-1 text-muted"></span> <input type="checkbox" /> <span class="check"></span> </label> </div>
-                    <div class="form-inline d-flex align-items-center py-2"> <label class="tick"><span class="fas fa-star"></span> <span class="fas fa-star"></span> <span class="far fa-star px-1 text-muted"></span> <span class="far fa-star px-1 text-muted"></span> <span class="far fa-star px-1 text-muted"></span> <input type="checkbox" /> <span class="check"></span> </label> </div>
-                    <div class="form-inline d-flex align-items-center py-2"> <label class="tick"> <span class="fas fa-star"></span> <span class="far fa-star px-1 text-muted"></span> <span class="far fa-star px-1 text-muted"></span> <span class="far fa-star px-1 text-muted"></span> <span class="far fa-star px-1 text-muted"></span> <input type="checkbox" /> <span class="check"></span> </label> </div>
-                </form>
-            </div>
-            <div class="pt-1">
-                <h5 class="font-weight-bold">Availibaility</h5>
-                <form class="rating">
-                    <div class="form-inline d-flex align-items-center py-2"> <label class="tick">In Stock <input type="checkbox" /> <span class="check"></span> </label> </div>
+                <div className="star-rating">
+                {[...Array(5)].map((star, index) => {
+                    index += 1;
+                    return (
+                    <button
+                        type="button"
+                        key={index}
+                        className={index <= (hover || rating) ? "on" : "off"}
+                        onClick={() => setRating(index)}
+                        onMouseEnter={() => setHover(index)}
+                        onMouseLeave={() => setHover(rating)}
+                    >
+                        <span className="star">&#9733;</span>
+                    </button>
+                    );
+                })}
+    </div>
                 </form>
             </div>
             <div class="pt-1">
                 <h5 class="font-weight-bold">Price</h5>
                 <form class="price">
                     <div className='d-flex flex-row'>
-                        <input type='number' placeholder='min' step='5' />
-                        <input type='number' placeholder='max' step='5' />
+                        <input type='number' placeholder='min' step='5' onChange={(e)=>{setMin(e.target.value)}} />
+                        <input type='number' placeholder='max' step='5' onChange={(e)=>{setMax(e.target.value)}}/>
                     </div>
                 </form>
             </div>
             <div class="pt-2">
-                <form class="apply">
+                
                     <div className='d-flex flex-row float-end'>
-                        <button className='btn btn-primary'>
+                        <button className='btn btn-primary'
+                        onClick={applyQuery}
+                        >
                             Apply
                         </button>
                     </div>
-                </form>
+                
             </div>
         </section>
         <section id="products">
@@ -198,7 +205,7 @@ export default function Filter({items}){
             </div>
         </section>
         
-        </div> 
+        </div>
     
     )
 }
