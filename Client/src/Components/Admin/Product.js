@@ -134,10 +134,7 @@ function Product (){
             data: e.target.files[0],
           }
           setImage(img)
-        // console.log("file : " + e.target.files[0]);
-        // console.log("filepreview : " +URL.createObjectURL(e.target.files[0]));
 
-        // console.log("Image : " + image.data);
         
     }
     const {register , handleSubmit} = useForm();
@@ -152,10 +149,9 @@ function Product (){
             prix : prix ,
             nom_article : nom_article ,
             description : description ,
-            nbr_etoile : nbr_etoile ,
             nombre_enstock : nombre_enstock ,
             etat_article : etat_article ,
-            imageOne : imageOne.filepreview
+            
         })
         .then(()=>{
             setProductList([{
@@ -232,12 +228,6 @@ function Product (){
         <div className="product-main mr-2 ml-2">
             <div className='flex-row d-flex justify-content-around'>
             <h1 >Produits</h1> 
-            <div class="input-group rounded w-25 h-10 mt-2">
-                <input type="search" class="form-control rounded " placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                <span class="input-group-text border-0" id="search-addon">
-                    <i class="bi bi-search"></i>
-                </span>
-            </div>
             <Button variant="primary" onClick={handleShow} >
                 <i className='bi bi-plus'></i>Ajouter Prdouit
             </Button>
@@ -306,6 +296,7 @@ function Product (){
                             <option>choissez un etat de l'article</option>
                             <option value="tendance">Tendance</option>
                             <option value="Nouveau">Nouveauté</option>
+                            <option value="autre">Autre</option>
                         </Form.Select>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                             <Form.Label>Description</Form.Label>
