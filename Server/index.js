@@ -5,6 +5,11 @@ const cors = require("cors");
 const multer = require('multer');
 const path = require('path');
 const bodyParser = require('body-parser');
+const pdf = require('html-pdf');
+
+const nodemailer = require('nodemailer');
+
+
 
 let isAuthClient = null
 
@@ -25,7 +30,19 @@ const db = mysql.createConnection({
     password : "root" , 
     database : "ecommercesystem"
 }); 
+
+
+
 /* User*/
+
+
+
+
+let time = new Date();
+const code = time.getFullYear() + time.getMonth()  + time.getDay() + time.getHours() ;
+
+
+
 app.post("/create_user" , (req,res) =>{
     
     
@@ -114,34 +131,20 @@ app.post("/admin" , (req,res)=>{
 
 /* Article */
 
-var storage = multer.diskStorage({
-    destination: (req, file, callBack) => {
-        callBack(null, './public/images/')     // './public/images/' directory name where save the file
-    },
-    filename: (req, file, callBack) => {
-        callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-    }
-})
 
-var upload = multer({
-    storage: storage
-});
 
-app.post("/create_article" ,upload.single('image') ,  (req,res)=>{
-    const IDarticle = req.body.IDarticle ;
+app.post("/create_article" ,  (req,res)=>{
     const prix = req.body.prix ;
     const nom_article = req.body.nom_article ;
     const description = req.body.description ;
-    const nbr_etoile = req.body.nbr_etoile ;
+    const category = req.body.category ;
+    const sous_category = req.body.sous_category;
     const nombre_enstock = req.body.nombre_enstock ;
     const etat_article = req.body.etat_article ;
     
-    var imgsrc =  req.body.imageOne ;
-    console.log(etat_article);
-    console.log(IDarticle);
-    console.log(imgsrc);
-    db.query("INSERT INTO article(IDarticle,prix,nom_article,description,nbr_etoile,nombre_enstock,etat_article,imgone) VALUES (?,?,?,?,?,?,?,?)" , 
-    [IDarticle,prix,nom_article,description,nbr_etoile,nombre_enstock,etat_article,imgsrc] , (err,result)=>{
+    const imgone = req.body.imgone ;
+    db.query("INSERT INTO article(prix,nom_article,description,nombre_enstock,etat_article,imgone,category,sous_category) VALUES (?,?,?,?,?,?,?,?)" , 
+    [prix,nom_article,description,nombre_enstock,etat_article,imgone,category,sous_category] , (err,result)=>{
         if(err){
             console.log(err);
         }
@@ -154,7 +157,7 @@ app.post("/create_article" ,upload.single('image') ,  (req,res)=>{
 })
 
 app.get("/get_article",(req,res)=>{
-    db.query("SELECT * FROM article" , (err,result)=>{
+    db.query("SELECT * FROM article ORDER BY IDarticle DESC" , (err,result)=>{
         if(err){
             console.log(err)
         }
@@ -406,6 +409,58 @@ app.post("/get_product_item" , (req,res)=>{
     })
 })
 
+app.post("/get_product_item_category" , (req,res)=>{
+    const query = req.body.query;
+    console.log(query);
+    db.query("SELECT * FROM article WHERE category = ? " ,[query] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                // role : "Client"
+            });
+            }
+        }
+    })
+})
+
+app.post("/get_article_query" , (req,res)=>{
+    const min = req.body.min;
+    const max = req.body.max;
+    const rating = req.body.rating
+    console.log(min);
+    console.log(max);
+    console.log(rating);
+    db.query("SELECT * FROM article WHERE prix > ? AND prix < ? AND nbr_etoile = ?  " ,[min , max , rating] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                // role : "Client"
+            });
+            }
+        }
+    })
+})
+
+
+
 app.post("/commande",(req,res)=>{
     const nom_article = req.body.nom_article;
     const prix = req.body.prix;
@@ -429,7 +484,8 @@ app.post("/commande",(req,res)=>{
         else {
             if(result.length > 0){
                 
-                res.json({Send : 'good' , message : "Success"});
+                res.json({idarticle : IDarticle});
+
             }
             else {
                 res.send({message : "Error with Adding Data to DataBase"});
@@ -495,10 +551,10 @@ app.put("/set_status_confirm" , (req,res)=>{
 
 app.put("/set_status_cancel" , (req,res)=>{
     const status = req.body.status
-    const idCommande = req.body.idCommande ;
+    const IDarticle = req.body.IDarticle ;
     console.log(idCommande);
     console.log(status);
-    db.query("UPDATE commande SET status = ? WHERE idCommande = ?" ,[status , idCommande] , (err,result)=>{
+    db.query("UPDATE commande SET status = ? WHERE IDarticle = ?" ,[status , IDarticle] , (err,result)=>{
         if(err){
             console.log(err);
         }
@@ -515,6 +571,124 @@ app.put("/set_status_cancel" , (req,res)=>{
         }
     })
 })
+
+app.post("/delete_panier" , (req,res)=>{
+    const IDarticle = req.body.IDarticle;
+    console.log("This ID : " + IDarticle + "Has been deleted");
+    db.query("DELETE FROM panier WHERE idarticle = ? ",
+    [IDarticle] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                role : "Client"
+            });
+            }
+        }
+    })
+}
+)
+
+
+app.post("/get_confirm_commande" , (req,res)=>{
+    const idClient = req.body.idClient;
+    db.query("SELECT * FROM commande  WHERE idClient = ? ",
+    [idClient] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                role : "Client"
+            });
+            }
+        }
+    })
+}
+)
+
+
+app.post("/add_comment" , (req,res)=>{
+    const comment = req.body.comment ;
+    const date_ajout = req.body.date_ajout;
+    const nbr_etoile = req.body.nbr_etoile ;
+    const idClient = req.body.idClient
+    const IDarticle = req.body.IDarticle
+    db.query("INSERT INTO reviews(contenu,date_ajouter,nbr_etoile,idClient,IDarticle) VALUES (?,?,?,?,?)",
+    [comment , date_ajout , nbr_etoile , idClient , IDarticle] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                role : "Client"
+            });
+            }
+        }
+    })
+}
+)
+
+app.post("/get_comment" , (req,res)=>{
+    const IDarticle = req.body.id
+    db.query("SELECT * FROM reviews WHERE IDarticle = ?",
+    [IDarticle] , (err,result)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            if(result.length > 0){
+                
+                res.send(result);
+                // console.log(result);
+                // res.send({role : "Admin"});
+            }
+            else {
+                res.send({message : "Error with fetching Data" , 
+                role : "Client"
+            });
+            }
+        }
+    })
+}
+)
+
+app.get("/get_client",(req,res)=>{
+    db.query("SELECT * FROM client" , (err,result)=>{
+        if(err){
+            console.log(err)
+        }
+        else {
+            console.log(result);
+            res.send(result);
+        }
+    })
+})
+
+
+
 
 
 app.listen(8000 , ()=>{
